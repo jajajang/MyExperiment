@@ -17,7 +17,6 @@ from sklearn.metrics import average_precision_score
 from torch.autograd import Variable
 
 import my_model
-import model
 
 import argparse
 import os
