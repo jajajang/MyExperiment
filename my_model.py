@@ -152,8 +152,8 @@ class myLoss(Moddy._WeightedLoss):
         self.reduce = reduce
     def forward(self, input, target):
         Moddy._assert_no_grad(target)
-        zet=th.sqrt(th.sum(input*input, dim=-1)+1)
-        return self.ruler(input/zet,Variable(position[true_indy[target]]))
+        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(5,-1)).t()
+        return self.ruler(input/zet,Variable(position[true_indy[target.data]]))
 
 
 class myLossA(Moddy._WeightedLoss):
@@ -164,7 +164,7 @@ class myLossA(Moddy._WeightedLoss):
         self.reduce = reduce
 
     def forward(self, input):
-        zet=th.sqrt(th.sum(input*input,dim=-1)+1)
+        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(5,-1)).t()
         resulty=Variable(th.FloatTensor(200))
         for i in range(0,200):
             resulty[i]=-self.ruler(input/zet, Variable(position[true_indy[i]]))
@@ -188,3 +188,8 @@ for i in range(0,200):
     true_indy[i]=obj.index(ordered_word[i])
 true_indy=th.LongTensor(true_indy)
 eps=1e-5
+
+
+ass=myLoss()
+bbb=position[1:10]
+ccc=th.LongTensor(range(11,20))
