@@ -181,12 +181,12 @@ while True:
 
 tempy=th.load('mammals.pth')
 obj=tempy['objects']
-position=tempy['model']['lt.weight']
+position=tempy['model']['lt.weight'].cuda()
 
 true_indy=[0]*200
 for i in range(0,200):
     true_indy[i]=obj.index(ordered_word[i])
-true_indy=th.LongTensor(true_indy)
+true_indy=th.LongTensor(true_indy).cuda()
 eps=1e-5
 
 
