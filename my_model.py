@@ -181,7 +181,7 @@ while True:
 
 tempy=th.load('mammals.pth')
 obj=tempy['objects']
-position=th.FloatTensor(tempy['model']['lt.weight']).cuda()
+position=(tempy['model']['lt.weight']).float().cuda()
 
 true_indy=[0]*200
 for i in range(0,200):
