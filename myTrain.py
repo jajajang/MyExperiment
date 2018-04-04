@@ -258,11 +258,10 @@ def validate(val_loader, model, criterion):
 
         # compute output
         output = model(input_var)
-        loss = criterion(output, target_var)
+        loss = criterion(output)
 
         # measure accuracy and record loss
-        prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
-        losses.update(loss.data[0], input.size(0))
+        prec1, prec5 = accuracy(loss.data, target, topk=(1, 5))
         top1.update(prec1[0], input.size(0))
         top5.update(prec5[0], input.size(0))
 
@@ -273,7 +272,6 @@ def validate(val_loader, model, criterion):
         if i % args.print_freq == 0:
             print('Test: [{0}/{1}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                   'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
                   'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
                    i, len(val_loader), batch_time=batch_time, loss=losses,
