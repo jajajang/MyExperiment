@@ -166,7 +166,7 @@ class myLossA(Moddy._WeightedLoss):
     def forward(self, input):
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(5,-1)).t()
         bs=input/zet
-        resulty=Variable(th.FloatTensor(256,200))
+        resulty=Variable(th.FloatTensor(256,200)).cuda()
         for i in range(0,256):
             for j in range(0,200):
                     resulty[i,j]=-self.ruler(bs[i], Variable(position[true_indy[j]]).cuda())
