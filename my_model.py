@@ -6,6 +6,8 @@ import torch.nn.modules.loss as Moddy
 from nltk.corpus import wordnet as wn
 from torch.autograd import Function, Variable
 
+
+z_dim=100
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
@@ -45,7 +47,7 @@ class BasicBlock(nn.Module):
 
 class myResNet(nn.Module):
 
-    def __init__(self, block, layers, num_dims=5):
+    def __init__(self, block, layers, num_dims=z_dim):
         self.inplanes = 64
         super(myResNet, self).__init__()
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
@@ -152,7 +154,7 @@ class myLoss(Moddy._WeightedLoss):
         self.reduce = reduce
     def forward(self, input, target):
         Moddy._assert_no_grad(target)
-        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(5,-1)).t()
+        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(z_dim,-1)).t()
         return th.sum(self.ruler(input/zet,Variable(position[true_indy[target.data]]).cuda()))
 
 
@@ -164,7 +166,7 @@ class myLossA(Moddy._WeightedLoss):
         self.reduce = reduce
 
     def forward(self, input):
-        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(5,-1)).t()
+        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(z_dim,-1)).t()
         bs=input/zet
         resulty=Variable(th.cuda.FloatTensor(input.size()[0],200))
         for i in range(0,input.size()[0]):
@@ -181,7 +183,7 @@ while True:
     if not line: break
     ordered_word.append(wn.synset_from_pos_and_offset(line[0],int(line[1:-1])).name())
 
-tempy=th.load('mammals.pth')
+tempy=th.load('bigger_dim.pth')
 obj=tempy['objects']
 position=(tempy['model']['lt.weight']).float().cuda()
 
@@ -189,7 +191,7 @@ true_indy=[0]*200
 for i in range(0,200):
     true_indy[i]=obj.index(ordered_word[i])
 true_indy=th.LongTensor(true_indy).cuda()
-eps=1e-5
+
 
 
 ass=myLoss()
