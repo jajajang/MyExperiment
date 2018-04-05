@@ -220,6 +220,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
         print output2.size()
         prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
         print prec1
+        print prec5
         losses.update(loss.data[0], input.size(0))
         top1.update(prec1[0], input.size(0))
         top5.update(prec5[0], input.size(0))
