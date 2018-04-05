@@ -146,7 +146,6 @@ class PoincareDistance(Function):
 
 class myLoss(Moddy._WeightedLoss):
     ruler=PoincareDistance()
-    ruler.cuda()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
         super(myLoss, self).__init__(weight, size_average)
         self.ignore_index = ignore_index
@@ -159,7 +158,6 @@ class myLoss(Moddy._WeightedLoss):
 
 class myLossA(Moddy._WeightedLoss):
     ruler=PoincareDistance()
-    ruler.cuda()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
         super(myLossA, self).__init__(weight, size_average)
         self.ignore_index = ignore_index
