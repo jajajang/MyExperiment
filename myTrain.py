@@ -214,7 +214,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
         # compute output
         output = model(input_var)
         loss = criterion(output, target_var)
-        output2 = criterion2(output, target_var)
+        output2 = criterion2(output)
 
         # measure accuracy and record loss
         prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
