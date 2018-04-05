@@ -146,9 +146,10 @@ class PoincareDistance(Function):
         return g.expand_as(gu) * gu, g.expand_as(gv) * gv
 
 
-ruler=PoincareDistance()
 
 class myLoss(Moddy._WeightedLoss):
+
+    ruler=PoincareDistance()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
         super(myLoss, self).__init__(weight, size_average)
         self.ignore_index = ignore_index
@@ -156,10 +157,11 @@ class myLoss(Moddy._WeightedLoss):
     def forward(self, input, target):
         Moddy._assert_no_grad(target)
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(z_dim,-1)).t()+1
-        return th.sum(ruler(input/zet,Variable(position[true_indy[target.data]]).cuda()))
+        return th.sum(self.ruler(input/zet,Variable(position[true_indy[target.data]]).cuda()))
 
 
 class myLossA(Moddy._WeightedLoss):
+    ruler=PoincareDistance()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
         super(myLossA, self).__init__(weight, size_average)
         self.ignore_index = ignore_index
@@ -171,7 +173,7 @@ class myLossA(Moddy._WeightedLoss):
         resulty=Variable(th.cuda.FloatTensor(input.size()[0],200))
         for i in range(0,input.size()[0]):
             for j in range(0,200):
-                    resulty[i,j]=-ruler(input[i], Variable(position[true_indy[j]]).cuda())
+                    resulty[i,j]=-self.ruler(bs[i], Variable(position[true_indy[j]]).cuda())
         return resulty
 
 
