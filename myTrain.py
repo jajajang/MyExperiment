@@ -108,8 +108,8 @@ def main():
         model = torch.nn.parallel.DistributedDataParallel(model)
 
     # define loss function (criterion) and optimizer
-    criterion = my_model.myLoss().cuda()
-    criterion2 = my_model.myLossA().cuda()
+    criterion_ = my_model.myLoss().cuda()
+    criterion2_ = my_model.myLossA().cuda()
 
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                                 momentum=args.momentum,
@@ -166,7 +166,7 @@ def main():
         num_workers=args.workers, pin_memory=True)
 
     if args.evaluate:
-        validate(val_loader, model, criterion2)
+        #validate(val_loader, model, criterion2)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
@@ -175,11 +175,11 @@ def main():
         adjust_learning_rate(optimizer, epoch)
 
         # train for one epoch
-        train(train_loader, model, criterion, optimizer, epoch)
+        train(train_loader, model, criterion_, criterion2_, optimizer, epoch)
 
         # evaluate on validation set
-        prec1 = validate(val_loader, model, criterion2)
-
+        #prec1 = validate(val_loader, model, criterion2)
+        """
         # remember best prec@1 and save checkpoint
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
@@ -190,9 +190,9 @@ def main():
             'best_prec1': best_prec1,
             'optimizer' : optimizer.state_dict(),
         }, is_best)
+        """
 
-
-def train(train_loader, model, criterion, optimizer, epoch):
+def train(train_loader, model, criterion, criterion2, optimizer, epoch):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -214,9 +214,10 @@ def train(train_loader, model, criterion, optimizer, epoch):
         # compute output
         output = model(input_var)
         loss = criterion(output, target_var)
+        output2 = criterion2(output, target_var)
 
         # measure accuracy and record loss
-        prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
+        prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
         losses.update(loss.data[0], input.size(0))
         top1.update(prec1[0], input.size(0))
         top5.update(prec5[0], input.size(0))

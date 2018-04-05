@@ -171,7 +171,7 @@ class myLossA(Moddy._WeightedLoss):
         resulty=Variable(th.cuda.FloatTensor(input.size()[0],200))
         for i in range(0,input.size()[0]):
             for j in range(0,200):
-                    resulty[i,j]=-self.ruler(bs[i], Variable(position[true_indy[j]]).cuda())
+                    resulty[i,j]=-self.ruler(input[i], Variable(position[true_indy[j]]).cuda())
         return resulty
 
 
