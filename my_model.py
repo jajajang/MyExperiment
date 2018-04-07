@@ -182,11 +182,9 @@ class whereru(Function):
     
     def forward(self,input):
         resulty=Variable(th.cuda.FloatTensor(position.size()[0]))
+        print input
         for j in range(0,position.size()[0]):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
-            print zet.type()
-            print position_zet
-            print zet*position_zet[j]
             print th.sum(input*position[j], dim=-1)
             resulty[j]=-self.ruler(zet*position_zet[j]-th.sum(input*position[j], dim=-1)).cuda()
         return resulty
