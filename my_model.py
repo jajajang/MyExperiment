@@ -204,7 +204,7 @@ tempy=th.load('bigger_dim.pth')
 obj=tempy['objects']
 position_=(tempy['model']['lt.weight']).float()
 
-true_pos=th.zeros(200)
+true_pos=th.zeros(200,z_dim)
 for i in range(0,200):
     true_pos[i]=position_[obj.index(ordered_word[i])]
 
