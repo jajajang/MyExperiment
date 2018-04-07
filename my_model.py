@@ -172,25 +172,29 @@ class myLoss(Moddy._WeightedLoss):
     def forward(self, input, target):
         Moddy._assert_no_grad(target)
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
-        print target.data
         inner=(th.sum(input*position[target.data], dim=-1))
         return th.sum(self.ruler(zet*position_zet[target.data]-inner).cuda())
 
+class whereru(Function):
+    def __init__(self):
+        super(whereru,self).__init__()
+    
+    def forward(self,input):
+        resulty=Variable(th.cuda.FloatTensor(position.size()[0]))
+        for j in range(0,position.size()[0]):
+            zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
+            resulty[j]=-self.ruler(zet*position_zet[j]-th.sum(input*position[j], dim=-1)).cuda()
+        return resulty
 
 class myLossA(Moddy._WeightedLoss):
-    ruler=Arcosh()
+    ruler=whereru()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
         super(myLossA, self).__init__(weight, size_average)
         self.ignore_index = ignore_index
         self.reduce = reduce
 
     def forward(self, input):
-        resulty=Variable(th.cuda.FloatTensor(input.size()[0],position.size()[0]))
-        zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
-        for i in range(0,input.size()[0]):
-            for j in range(0,position.size()[0]):
-                    resulty[i,j]=-self.ruler(zet[i]*position_zet[j]-th.sum(input[i]*position[j], dim=-1)).cuda()
-        return resulty
+        return ruler(input)
 
 
 ordered_word=[]
