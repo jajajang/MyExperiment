@@ -189,7 +189,7 @@ class myLossA(Moddy._WeightedLoss):
         zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
         for i in range(0,input.size()[0]):
             for j in range(0,position.size()[0]):
-                    resulty[i,j]=-self.ruler(zet*position_zet[j]-th.sum(input*position[j], dim=-1)).cuda()
+                    resulty[i,j]=-self.ruler(zet[i]*position_zet[j]-th.sum(input[i]*position[j], dim=-1)).cuda()
         return resulty
 
 
