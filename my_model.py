@@ -177,19 +177,18 @@ class myLoss(Moddy._WeightedLoss):
 
 
 class myLossA(Moddy._WeightedLoss):
-    ruler=PoincareDistance()
+    ruler=Arcosh()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
         super(myLossA, self).__init__(weight, size_average)
         self.ignore_index = ignore_index
         self.reduce = reduce
 
     def forward(self, input):
-        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(z_dim,-1)).t()
-        bs=input/(zet+1)
         resulty=Variable(th.cuda.FloatTensor(input.size()[0],position.size()[0]))
+        zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
         for i in range(0,input.size()[0]):
             for j in range(0,position.size()[0]):
-                    resulty[i,j]=self.ruler(bs[i], Variable(position[j]).cuda())
+                    resulty[i,j]=-self.ruler(zet*position_zet[j]-th.sum(input*position[j], dim=-1)).cuda()
         return resulty
 
 
@@ -208,6 +207,6 @@ true_pos=th.zeros(200,z_dim)
 for i in range(0,200):
     true_pos[i]=position_[obj.index(ordered_word[i])]
 
-zetty=-th.sum(true_pos*true_pos, dim=-1).expand(-1,z_dim)+1
+zetty=-th.sum(true_pos*true_pos, dim=-1).expand(z_dim)+1
 position=Variable(2*true_pos/zetty.t(),requires_grad=False)
 position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
