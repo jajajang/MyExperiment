@@ -194,7 +194,7 @@ class myLossA(Moddy._WeightedLoss):
         self.reduce = reduce
 
     def forward(self, input):
-        return ruler(input)
+        return self.ruler(input)
 
 
 ordered_word=[]
