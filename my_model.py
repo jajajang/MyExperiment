@@ -202,7 +202,7 @@ while True:
 
 tempy=th.load('bigger_dim.pth')
 obj=tempy['objects']
-position_=(tempy['model']['lt.weight']).float().cuda()
+position_=(tempy['model']['lt.weight']).float()
 
 true_pos=th.zeros(200)
 for i in range(0,200):
