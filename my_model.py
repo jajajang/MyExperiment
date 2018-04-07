@@ -7,7 +7,7 @@ from nltk.corpus import wordnet as wn
 from torch.autograd import Function, Variable
 
 
-z_dim=100
+z_dim=20
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
@@ -184,6 +184,8 @@ class whereru(Function):
         resulty=Variable(th.cuda.FloatTensor(position.size()[0]))
         for j in range(0,position.size()[0]):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
+            print zet*position_zet[j]
+            print th.sum(input*position[j], dim=-1)
             resulty[j]=-self.ruler(zet*position_zet[j]-th.sum(input*position[j], dim=-1)).cuda()
         return resulty
 
@@ -214,5 +216,5 @@ for i in range(0,200):
     true_pos[i]=position_[obj.index(ordered_word[i])]
 
 zetty=-th.sum(true_pos*true_pos, dim=-1).expand(z_dim,-1)+1
-position=2*true_pos/zetty.t()
+position=Variable(2*true_pos/zetty.t(),requires_grad=False).cuda()
 position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
