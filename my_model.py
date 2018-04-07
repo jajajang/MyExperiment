@@ -180,9 +180,9 @@ class whereru(Function):
     def __init__(self):
         super(whereru,self).__init__()
     
-    def forward(self,input):
+    def forward(self,inputt):
         resulty=Variable(th.cuda.FloatTensor(position.size()[0]))
-        print input
+        input=Variable(inputt, requires_grad=False)
         for j in range(0,position.size()[0]):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
             print th.sum(input*position[j], dim=-1)
