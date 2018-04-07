@@ -183,8 +183,8 @@ class myLossA(Moddy._WeightedLoss):
         self.reduce = reduce
 
     def forward(self, input):
-        resulty=Variable(th.cuda.FloatTensor(position.size()[0],inputt.size()[0]))
-        input=Variable(inputt, requires_grad=False)
+        resulty=Variable(th.cuda.FloatTensor(position.size()[0],input.size()[0]))
+        input=Variable(input, requires_grad=False)
         for j in range(0,position.size()[0]):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
             beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
