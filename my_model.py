@@ -176,6 +176,7 @@ class myLoss(Moddy._WeightedLoss):
         return th.sum(self.ruler(zet*position_zet[target.data]-inner).cuda())
 
 class whereru(Function):
+    ruler=Arcosh()
     def __init__(self):
         super(whereru,self).__init__()
     
