@@ -175,12 +175,14 @@ class myLoss(Moddy._WeightedLoss):
         inner=(th.sum(input*position[target.data], dim=-1))
         return th.sum(self.ruler(zet*position_zet[target.data]-inner).cuda())
 
-class whereru(Function):
+class myLossA(Moddy._WeightedLoss):
     ruler=Arcosh()
-    def __init__(self):
-        super(whereru,self).__init__()
-    
-    def forward(self,inputt):
+    def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
+        super(myLossA, self).__init__(weight, size_average)
+        self.ignore_index = ignore_index
+        self.reduce = reduce
+
+    def forward(self, input):
         resulty=Variable(th.cuda.FloatTensor(position.size()[0],inputt.size()[0]))
         input=Variable(inputt, requires_grad=False)
         for j in range(0,position.size()[0]):
@@ -188,17 +190,7 @@ class whereru(Function):
             beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
             resulty[j]=-self.ruler(beep).cuda()
         print resulty
-        return resulty
-
-class myLossA(Moddy._WeightedLoss):
-    ruler=whereru()
-    def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
-        super(myLossA, self).__init__(weight, size_average)
-        self.ignore_index = ignore_index
-        self.reduce = reduce
-
-    def forward(self, input):
-        return self.ruler(input)
+        return resulty.t()
 
 
 ordered_word=[]
