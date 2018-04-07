@@ -216,7 +216,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
         output2 = criterion2(output)
 
         # measure accuracy and record loss
-        prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
+        prec1, prec5 = accuracy(output2.data, target, topk=(1, 50))
         losses.update(loss.data[0], input.size(0))
         top1.update(prec1[0], input.size(0))
         top5.update(prec5[0], input.size(0))
