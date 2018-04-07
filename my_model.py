@@ -188,7 +188,6 @@ class myLossA(Moddy._WeightedLoss):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
             beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
             resulty[j]=-self.ruler(beep).cuda()
-        print resulty
         return resulty.t()
 
 
