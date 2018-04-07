@@ -185,8 +185,8 @@ class whereru(Function):
         input=Variable(inputt, requires_grad=False)
         for j in range(0,position.size()[0]):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
-            print zet*position_zet[j]-th.sum(input*position[j], dim=-1)
-            resulty[j]=-self.ruler(zet*position_zet[j]-th.sum(input*position[j], dim=-1)).cuda()
+            beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
+            resulty[j]=-self.ruler(beep).cuda()
         return resulty
 
 class myLossA(Moddy._WeightedLoss):
