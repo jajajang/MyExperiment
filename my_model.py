@@ -204,7 +204,7 @@ tempy=th.load('bigger_dim.pth')
 obj=tempy['objects']
 position_=(tempy['model']['lt.weight']).float().cuda()
 
-true_pos=th.cuda.FloatTensor(200).zeros()
+true_pos=th.zeros(200)
 for i in range(0,200):
     true_pos[i]=position_[obj.index(ordered_word[i])]
 
