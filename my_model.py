@@ -181,12 +181,13 @@ class whereru(Function):
         super(whereru,self).__init__()
     
     def forward(self,inputt):
-        resulty=Variable(th.cuda.FloatTensor(position.size()[0]))
+        resulty=Variable(th.cuda.FloatTensor(position.size()[0],inputt.size()[0]))
         input=Variable(inputt, requires_grad=False)
         for j in range(0,position.size()[0]):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
             beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
             resulty[j]=-self.ruler(beep).cuda()
+        print resulty
         return resulty
 
 class myLossA(Moddy._WeightedLoss):
