@@ -111,8 +111,7 @@ def main():
     criterion_ = my_model.myLoss().cuda()
     criterion2_ = my_model.myLossA().cuda()
 
-    optimizer = torch.optim.SGD(model.parameters(), args.lr,
-                                momentum=args.momentum,
+    optimizer = torch.optim.Adam(model.parameters(), args.lr,
                                 weight_decay=args.weight_decay)
 
     # optionally resume from a checkpoint
@@ -225,7 +224,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
-        loss.backward(retain_graph=True)
+        loss.backward()
         optimizer.step()
 
         # measure elapsed time

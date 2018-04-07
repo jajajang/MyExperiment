@@ -146,18 +146,34 @@ class PoincareDistance(Function):
         return g.expand_as(gu) * gu, g.expand_as(gv) * gv
 
 
+class Arcosh(Function):
+    def __init__(self, eps=eps):
+        super(Arcosh, self).__init__()
+        self.eps = eps
+
+    def forward(self, x):
+        self.save_for_backward(x)
+        self.z = th.sqrt(x * x - 1)
+        return th.log(x + self.z)
+
+    def backward(self, g):
+        z = th.clamp(self.z, min=eps)
+        z = g / z
+        return z
+
 
 class myLoss(Moddy._WeightedLoss):
 
-    ruler=PoincareDistance()
+    ruler=Arcosh()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
         super(myLoss, self).__init__(weight, size_average)
         self.ignore_index = ignore_index
         self.reduce = reduce
     def forward(self, input, target):
         Moddy._assert_no_grad(target)
-        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(z_dim,-1)).t()+1
-        return th.sum(self.ruler(input/zet,Variable(position[true_indy[target.data]]).cuda()))
+        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
+        inner=(th.sum(input*position[target.data], dim=-1))
+        return th.sum(self.ruler(zet*position_zet[target.data]-inner).cuda())
 
 
 class myLossA(Moddy._WeightedLoss):
@@ -170,10 +186,10 @@ class myLossA(Moddy._WeightedLoss):
     def forward(self, input):
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)).expand(z_dim,-1)).t()
         bs=input/(zet+1)
-        resulty=Variable(th.cuda.FloatTensor(input.size()[0],200))
+        resulty=Variable(th.cuda.FloatTensor(input.size()[0],position.size()[0]))
         for i in range(0,input.size()[0]):
-            for j in range(0,200):
-                    resulty[i,j]=-self.ruler(bs[i], Variable(position[true_indy[j]]).cuda())
+            for j in range(0,position.size()[0]):
+                    resulty[i,j]=self.ruler(bs[i], Variable(position[j]).cuda())
         return resulty
 
 
@@ -186,15 +202,12 @@ while True:
 
 tempy=th.load('bigger_dim.pth')
 obj=tempy['objects']
-position=(tempy['model']['lt.weight']).float().cuda()
+position_=(tempy['model']['lt.weight']).float().cuda()
 
-true_indy=[0]*200
+true_pos=th.cuda.FloatTensor(200)._zeros()
 for i in range(0,200):
-    true_indy[i]=obj.index(ordered_word[i])
-true_indy=th.LongTensor(true_indy).cuda()
+    true_pos[i]=position_[obj.index(ordered_word[i])]
 
-
-
-ass=myLoss()
-bbb=position[1:10]
-ccc=th.LongTensor(range(11,20))
+zetty=-th.sum(true_pos*true_pos, dim=-1).expand(-1,z_dim)+1
+position=Variable(2*true_pos/zetty.t(),requires_grad=False)
+position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
