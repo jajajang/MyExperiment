@@ -209,5 +209,3 @@ for i in range(0,200):
 zetty=-th.sum(true_pos*true_pos, dim=-1).expand(z_dim,-1)+1
 position=Variable(2*true_pos/zetty.t(),requires_grad=False).cuda()
 position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
-print th.sqrt(th.sum(position*position, dim=-1).max()
-print th.sqrt(th.sum(position*position, dim=-1).min()
