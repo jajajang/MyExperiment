@@ -113,10 +113,10 @@ def myResnet18(pretrained=False, **kwargs):
 
     model = myResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
     if pretrained:
-        self.pretrained_dict =  models.resnet18(pretrained=True).state_dict()
+        pretrained_dict =  models.resnet18(pretrained=True).state_dict()
         model_dict = model.state_dict()
-        self.pretrained_dict = {k: v for k, v in self.pretrained_dict.items() if k in model_dict}
-        model_dict.update(self.pretrained_dict) 
+        pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
+        model_dict.update(pretrained_dict) 
 
         
     return model
