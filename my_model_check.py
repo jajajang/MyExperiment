@@ -5,11 +5,12 @@ import torch.utils.model_zoo as model_zoo
 import torch.nn.modules.loss as Moddy
 from nltk.corpus import wordnet as wn
 from torch.autograd import Function, Variable
-
+import numpy
 
 z_dim=100
+"""
 def conv3x3(in_planes, out_planes, stride=1):
-    """3x3 convolution with padding"""
+    #3x3 convolution with padding
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
                      padding=1, bias=False)
 
@@ -106,10 +107,6 @@ class myResNet(nn.Module):
 
 
 def myResnet18(pretrained=False, **kwargs):
-    """Constructs a ResNet-18 model.
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-    """
     model = myResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
     return model
 
@@ -189,7 +186,7 @@ class myLossA(Moddy._WeightedLoss):
             beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
             resulty[j]=-self.ruler(beep).cuda()
         return resulty.t()
-
+"""
 
 ordered_word=[]
 f=open('wnids.txt','r')
@@ -206,8 +203,10 @@ true_pos=th.zeros(200,z_dim)
 for i in range(0,200):
     true_pos[i]=position_[obj.index(ordered_word[i])]
 
-zetty=-th.sum(true_pos*true_pos, dim=-1).expand(z_dim,-1)+1
-position=Variable(2*true_pos/zetty.t(),requires_grad=False).cuda()
+zetty=(-th.sum(true_pos*true_pos, dim=-1).expand(z_dim,-1)+1)
+position=2*true_pos/zetty.t()
 position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
-print th.sqrt(th.sum(position*position, dim=-1).max()
-print th.sqrt(th.sum(position*position, dim=-1).min()
+val, ind = th.sqrt(th.sum(position*position, dim=-1)).max(0)
+print val, ind, ordered_word[28]
+val, ind = th.sqrt(th.sum(position*position, dim=-1)).min(0)
+print val, ind, ordered_word[ind.int()]

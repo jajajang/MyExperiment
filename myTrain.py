@@ -177,7 +177,7 @@ def main():
         train(train_loader, model, criterion_, criterion2_, optimizer, epoch)
 
         # evaluate on validation set
-        #prec1 = validate(val_loader, model, criterion2)
+        prec1 = validate(val_loader, model, criterion2_)
         """
         # remember best prec@1 and save checkpoint
         is_best = prec1 > best_prec1
@@ -211,12 +211,12 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
         target_var = torch.autograd.Variable(target)
 
         # compute output
-        output = model(input_var)
+        output = model(input_var)*10
         loss = criterion(output, target_var)
         output2 = criterion2(output)
 
         # measure accuracy and record loss
-        prec1, prec5 = accuracy(output2.data, target, topk=(1, 50))
+        prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
         losses.update(loss.data[0], input.size(0))
         top1.update(prec1[0], input.size(0))
         top5.update(prec5[0], input.size(0))
@@ -254,10 +254,9 @@ def validate(val_loader, model, criterion):
     for i, (input, target) in enumerate(val_loader):
         target = target.cuda(async=True)
         input_var = torch.autograd.Variable(input, volatile=True)
-        target_var = torch.autograd.Variable(target, volatile=True)
 
         # compute output
-        output = model(input_var)
+        output = model(input_var)*10
         loss = criterion(output)
 
         # measure accuracy and record loss
