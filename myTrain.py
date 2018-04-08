@@ -16,7 +16,7 @@ import torch.multiprocessing as mp
 from sklearn.metrics import average_precision_score
 from torch.autograd import Variable
 
-import my_model
+import my_model_pretrain as my_model
 
 import argparse
 import os
@@ -92,7 +92,7 @@ def main():
     # create model
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.arch))
-        model = models.__dict__[args.arch](pretrained=True)
+        model = my_model.myResnet18(pretrained=True)
     else:
         print("=> creating model '{}'".format(args.arch))
         model = my_model.myResnet18()
@@ -111,7 +111,16 @@ def main():
     criterion_ = my_model.myLoss().cuda()
     criterion2_ = my_model.myLossA().cuda()
 
-    optimizer = torch.optim.Adam(model.parameters(), args.lr,
+    if args.pretrained:
+        ignored_params = list(map(id, model.fc_mine.parameters()))
+        base_params = filter(lambda p: id(p) not in ignored_params,
+                            model.parameters())
+        for paramy in base_params:
+            paramy.requires_grad=False
+        optimizer = torch.optim.Adam(model.parameters(), args.lr,
+                                weight_decay=args.weight_decay)
+
+    else: optimizer = torch.optim.Adam(model.parameters(), args.lr,
                                 weight_decay=args.weight_decay)
 
     # optionally resume from a checkpoint
