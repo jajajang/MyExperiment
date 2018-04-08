@@ -93,6 +93,8 @@ def main():
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.arch))
         model = my_modell.myResnet18(pretrained=True)
+        print model.conv1.parameters()
+        print model.fc_mine.parameters()
     else:
         print("=> creating model '{}'".format(args.arch))
         model = my_modell.myResnet18()
