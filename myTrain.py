@@ -94,11 +94,6 @@ def main():
         print("=> using pre-trained model '{}'".format(args.arch))
         model = my_modell.myResnet18(pretrained=True)
 
-        ignored_params = list(map(id, model.fc_mine.parameters()))
-        base_params = filter(lambda p: id(p) not in ignored_params,
-                            model.parameters())
-        for paramy in base_params:
-            paramy.requires_grad=False
     else:
         print("=> creating model '{}'".format(args.arch))
         model = my_modell.myResnet18()
@@ -117,7 +112,16 @@ def main():
     criterion_ = my_modell.myLoss().cuda()
     criterion2_ = my_modell.myLossA().cuda()
 
-    optimizer = torch.optim.Adam(model.parameters(), args.lr,
+    if args.pretrained:
+        ignored_params = list(map(id, model.module.fc_mine.parameters()))
+        base_params = filter(lambda p: id(p) not in ignored_params,
+                            model.module.parameters())
+        for paramy in base_params:
+            paramy.requires_grad=False
+        optimizer = torch.optim.Adam(model.module.fc_mine.parameters(), args.lr,
+                                weight_decay=args.weight_decay)
+
+    else: optimizer = torch.optim.Adam(model.parameters(), args.lr,
                                 weight_decay=args.weight_decay)
 
     # optionally resume from a checkpoint
