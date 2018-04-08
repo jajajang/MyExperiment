@@ -117,7 +117,6 @@ def myResnet18(pretrained=False, **kwargs):
         model_dict = model.state_dict()
         pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
         model_dict.update(pretrained_dict) 
-
         
     return model
 

@@ -16,7 +16,7 @@ import torch.multiprocessing as mp
 from sklearn.metrics import average_precision_score
 from torch.autograd import Variable
 
-import my_model_pretrain as my_model
+import my_model_pretrain as my_modell
 
 import argparse
 import os
@@ -92,10 +92,10 @@ def main():
     # create model
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.arch))
-        model = my_model.myResnet18(pretrained=True)
+        model = my_modell.myResnet18(pretrained=True)
     else:
         print("=> creating model '{}'".format(args.arch))
-        model = my_model.myResnet18()
+        model = my_modell.myResnet18()
 
     if not args.distributed:
         if args.arch.startswith('alexnet') or args.arch.startswith('vgg'):
@@ -108,8 +108,8 @@ def main():
         model = torch.nn.parallel.DistributedDataParallel(model)
 
     # define loss function (criterion) and optimizer
-    criterion_ = my_model.myLoss().cuda()
-    criterion2_ = my_model.myLossA().cuda()
+    criterion_ = my_modell.myLoss().cuda()
+    criterion2_ = my_modell.myLossA().cuda()
 
     if args.pretrained:
         ignored_params = list(map(id, model.fc_mine.parameters()))
