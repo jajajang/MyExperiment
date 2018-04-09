@@ -190,13 +190,18 @@ class myLossA(Moddy._WeightedLoss):
             resulty[j]=-self.ruler(beep).cuda()
         return resulty.t()
 
-
+indy_mix=[]
 ordered_word=[]
 f=open('wnids.txt','r')
 while True:
     line=f.readline()
     if not line: break
-    ordered_word.append(wn.synset_from_pos_and_offset(line[0],int(line[1:-1])).name())
+    #ordered_word.append(wn.synset_from_pos_and_offset(line[0],int(line[1:-1])).name())
+    indy_mix.append(int(line[1:-1]))
+
+ordered_indy=sorted(indy_mix)
+for i in range(0,len(ordered_indy)):
+    ordered_word.append(wn.synset_from_pos_and_offset('n',ordered_indy).name())
 
 tempy=th.load('bigger_dim.pth')
 obj=tempy['objects']
