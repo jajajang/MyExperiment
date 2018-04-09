@@ -201,7 +201,7 @@ while True:
 
 ordered_indy=sorted(indy_mix)
 for i in range(0,len(ordered_indy)):
-    ordered_word.append(wn.synset_from_pos_and_offset('n',ordered_indy).name())
+    ordered_word.append(wn.synset_from_pos_and_offset('n',ordered_indy[i]).name())
 
 tempy=th.load('bigger_dim.pth')
 obj=tempy['objects']
