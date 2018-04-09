@@ -16,7 +16,7 @@ import torch.multiprocessing as mp
 from sklearn.metrics import average_precision_score
 from torch.autograd import Variable
 
-import my_model_pretrain as my_modell
+import my_model as my_modell
 
 import argparse
 import os
