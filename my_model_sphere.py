@@ -204,6 +204,6 @@ for i in range(0,len(ordered_indy)):
     ordered_word.append(wn.synset_from_pos_and_offset('n',ordered_indy[i]).name())
 
 position_= th.randn(200,z_dim)
-normy=th.sqrt(th.sum(position*position, dim=-1)).expand(z_dim,-1)
+normy=th.sqrt(th.sum(position_*position_, dim=-1)).expand(z_dim,-1)
 position=Variable(position_/normy *100,requires_grad=False).cuda()
 position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
