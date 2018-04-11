@@ -186,20 +186,6 @@ def main():
         # train for one epoch
         train(train_loader, model, criterion_, criterion2_, optimizer, epoch)
 
-        # evaluate on validation set
-        prec1 = validate(val_loader, model, criterion2_)
-        """
-        # remember best prec@1 and save checkpoint
-        is_best = prec1 > best_prec1
-        best_prec1 = max(prec1, best_prec1)
-        save_checkpoint({
-            'epoch': epoch + 1,
-            'arch': args.arch,
-            'state_dict': model.state_dict(),
-            'best_prec1': best_prec1,
-            'optimizer' : optimizer.state_dict(),
-        }, is_best)
-        """
 
 def train(train_loader, model, criterion, criterion2, optimizer, epoch):
     batch_time = AverageMeter()
@@ -221,7 +207,8 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
         target_var = torch.autograd.Variable(target)
 
         # compute output
-        output = model(input_var)*10
+        output = model(input_var)*100
+        if i%100==0: print output
         loss = criterion(output, target_var)
         output2 = criterion2(output)
 
@@ -328,12 +315,7 @@ def accuracy(output, target, topk=(1,)):
     maxk = max(topk)
     batch_size = target.size(0)
 
-    black, pred = output.topk(maxk, 1, True, True)
-    print target
-    print 'black'
-    print black
-    print 'pred'
-    print pred
+    _, pred = output.topk(maxk, 1, True, True)
     pred = pred.t()
     correct = pred.eq(target.view(1, -1).expand_as(pred))
 
