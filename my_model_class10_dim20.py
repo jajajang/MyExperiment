@@ -7,7 +7,7 @@ from nltk.corpus import wordnet as wn
 from torch.autograd import Function, Variable
 
 
-z_dim=100
+z_dim=20
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
