@@ -7,7 +7,7 @@ from nltk.corpus import wordnet as wn
 from torch.autograd import Function, Variable
 
 
-z_dim=20
+z_dim=5
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
@@ -203,7 +203,7 @@ ordered_indy=sorted(indy_mix)
 for i in range(0,len(ordered_indy)):
     ordered_word.append(wn.synset_from_pos_and_offset('n',ordered_indy[i]).name())
 
-tempy=th.load('dim_20.pth')
+tempy=th.load('dim_5_200.pth')
 obj=tempy['objects']
 position_=(tempy['model']['lt.weight']).float()
 
