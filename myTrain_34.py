@@ -96,7 +96,7 @@ def main():
 
     else:
         print("=> creating model '{}'".format(args.arch))
-        model = my_modell.myResnet152()
+        model = my_modell.myResnet34()
 
     if not args.distributed:
         if args.arch.startswith('alexnet') or args.arch.startswith('vgg'):

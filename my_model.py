@@ -150,6 +150,15 @@ def myResnet18(pretrained=False, **kwargs):
     model = myResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
     return model
 
+def myResnet34(pretrained=False, **kwargs):
+    """Constructs a ResNet-34 model.
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet
+    """
+    model = ResNet(BasicBlock, [3, 4, 6, 3], **kwargs)
+    return model
+
+
 def myResnet152(pretrained=False, **kwargs):
     model = myResNet(Bottleneck, [3, 8, 36, 3], **kwargs)
     return model
