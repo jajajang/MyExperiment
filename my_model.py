@@ -155,7 +155,7 @@ def myResnet34(pretrained=False, **kwargs):
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = ResNet(BasicBlock, [3, 4, 6, 3], **kwargs)
+    model = myResNet(BasicBlock, [3, 4, 6, 3], **kwargs)
     return model
 
 
