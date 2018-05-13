@@ -39,6 +39,11 @@ model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
+class MyImageFolder(ImageFolder):
+    def __getitem__(self, index):
+        return super(MyImageFolder, self).__getitem__(index), self.imgs[index]#return image path
+
+
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 parser.add_argument('data', metavar='DIR',
                     help='path to dataset')
@@ -77,6 +82,7 @@ parser.add_argument('--dist-backend', default='gloo', type=str,
                     help='distributed backend')
 
 best_prec1 = 0
+outf_mean=open('mean_error.txt','w')
 
 
 def main():
@@ -146,7 +152,7 @@ def main():
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
-    train_dataset = datasets.ImageFolder(
+    train_dataset = MyImageFolder(
         traindir,
         transforms.Compose([
             transforms.RandomResizedCrop(224),
@@ -185,7 +191,7 @@ def main():
 
         # train for one epoch
         train(train_loader, model, criterion_, criterion2_, optimizer, epoch)
-
+    model.save_state_dict('mytraining.pt')
 
 def train(train_loader, model, criterion, criterion2, optimizer, epoch):
     batch_time = AverageMeter()
@@ -198,7 +204,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
     model.train()
 
     end = time.time()
-    for i, (input, target) in enumerate(train_loader):
+    for i, (input, target, filenam) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
 
@@ -207,8 +213,11 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
         target_var = torch.autograd.Variable(target)
 
         # compute output
-        output = model(input_var)*100
-        if i%100==0: print output
+        output = model(input_var)
+        if i%100==0:
+            print filenam
+            print target
+
         loss = criterion(output, target_var)
         output2 = criterion2(output)
 
@@ -236,6 +245,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
                   'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
                    epoch, i, len(train_loader), batch_time=batch_time,
                    data_time=data_time, loss=losses, top1=top1, top5=top5))
+            outf_mean.write(str(losses.avg))
 
 
 def validate(val_loader, model, criterion):
