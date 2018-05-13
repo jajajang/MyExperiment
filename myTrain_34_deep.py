@@ -191,7 +191,7 @@ def main():
 
         # train for one epoch
         train(train_loader, model, criterion_, criterion2_, optimizer, epoch)
-    model.save_state_dict('mytraining.pt')
+    torch.save(model.module.state_dict('mytraining.pt'))
 
 def train(train_loader, model, criterion, criterion2, optimizer, epoch):
     batch_time = AverageMeter()
