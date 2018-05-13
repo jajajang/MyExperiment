@@ -39,7 +39,7 @@ model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
-class MyImageFolder(torch.utils.data.ImageFolder):
+class MyImageFolder(datasetsImageFolder):
     def __getitem__(self, index):
         return super(MyImageFolder, self).__getitem__(index), self.imgs[index]#return image path
 
