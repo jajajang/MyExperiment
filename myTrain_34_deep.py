@@ -204,9 +204,10 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
     model.train()
 
     end = time.time()
-    for i, (input, target, filenam) in enumerate(train_loader):
+    for i, datata in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
+        (input, target), (filenam,_)=datata
 
         target = target.cuda(async=True)
         input_var = torch.autograd.Variable(input)
@@ -245,7 +246,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
                   'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
                    epoch, i, len(train_loader), batch_time=batch_time,
                    data_time=data_time, loss=losses, top1=top1, top5=top5))
-            outf_mean.write(str(losses.avg))
+            outf_mean.write(str(losses.avg)+'\n')
 
 
 def validate(val_loader, model, criterion):
