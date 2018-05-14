@@ -303,7 +303,6 @@ class myLossV(Moddy._WeightedLoss):
         self.ignore_index = ignore_index
         self.reduce = reduce
     def forward(self, input, target):
-        Moddy._assert_no_grad(target)
         #all=(target.data).expand(len(input))
         all=[target]*len(input)
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
