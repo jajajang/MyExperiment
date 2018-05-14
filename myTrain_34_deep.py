@@ -266,7 +266,7 @@ def validate(val_loader, model,criterion):
         output = model(input_var)
         for i in range(0,8):
             #target=Variable(torch.LongTensor([31,194,140,92,63,14,43,34])).cuda()
-            target=[31,194,140,92,63,14,43,34]
+            target=[130,194,140,92,63,14,43,34]
             loss = criterion(output, target[i])
             outf_high.write(str(loss.data)+'\t')
         outf_high.write('\n')
