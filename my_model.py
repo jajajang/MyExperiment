@@ -306,6 +306,7 @@ class myLossV(Moddy._WeightedLoss):
         Moddy._assert_no_grad(target)
         all=(target.data).expand(len(input))
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
+        print all
         inner=(th.sum(input*position_all[all], dim=-1))
         return th.sum(self.ruler(zet*zetty_all[all]-inner).cuda())
 
