@@ -212,9 +212,6 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
 
         # compute output
         output = model(input_var)
-        if i%100==0:
-            print filenam
-            print target
 
         loss = criterion(output, target_var)
         output2 = criterion2(output)
