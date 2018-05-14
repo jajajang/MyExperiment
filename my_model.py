@@ -303,7 +303,7 @@ class myLossV(Moddy._WeightedLoss):
         self.ignore_index = ignore_index
         self.reduce = reduce
     def forward(self, input, target):
-        all=torch.LongTensor([target.data]*len(input))
+        all=th.LongTensor([target.data]*len(input))
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
         inner=(th.sum(input*position_all[all], dim=-1))
         return th.sum(self.ruler(zet*zetty_all[all]-inner).cuda())
