@@ -118,6 +118,7 @@ def main():
     # define loss function (criterion) and optimizer
     criterion_ = my_modell.myLoss().cuda()
     criterion2_ = my_modell.myLossA().cuda()
+    criterionv_ = my_modell.myLossV().cuda()
 
     if args.pretrained:
         ignored_params = list(map(id, model.module.fc_mine.parameters()))
@@ -252,6 +253,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
             outf_mean.write(str(losses.avg)+'\n')
 
 
+
 def validate(val_loader, model):
     model.eval()
 
@@ -264,7 +266,7 @@ def validate(val_loader, model):
         output = model(input_var)
         for i in range(0,8):
             target=Variable(torch.LongTensor([31,194,140,92,63,14,43,34]))
-            loss = my_modell.myLossV(output, target[i])
+            loss = criterionv_(output, target[i])
             outf_high.write(str(loss.data)+'\t')
         outf_high.write('\n')
 
