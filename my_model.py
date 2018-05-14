@@ -295,6 +295,19 @@ class myLoss(Moddy._WeightedLoss):
         inner=(th.sum(input*position[target.data], dim=-1))
         return th.sum(self.ruler(zet*position_zet[target.data]-inner).cuda())
 
+class myLossV(Moddy._WeightedLoss):
+
+    ruler=Arcosh()
+    def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
+        super(myLoss, self).__init__(weight, size_average)
+        self.ignore_index = ignore_index
+        self.reduce = reduce
+    def forward(self, input, target):
+        all=[target]*len(input)
+        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
+        inner=(th.sum(input*position_all[all], dim=-1))
+        return th.sum(self.ruler(zet*zetty_all[all]-inner).cuda())
+
 class myLossA(Moddy._WeightedLoss):
     ruler=Arcosh()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
@@ -334,3 +347,7 @@ for i in range(0,200):
 zetty=-th.sum(true_pos*true_pos, dim=-1).expand(z_dim,-1)+1
 position=Variable(2*true_pos/zetty.t(),requires_grad=False).cuda()
 position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
+
+
+zetty_all=-th.sum(position_*position_, dim=-1).expand(z_dim,-1)+1
+position_all=Variable(2*position_/zetty_all.t(), requires_grad=False)

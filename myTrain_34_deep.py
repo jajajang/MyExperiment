@@ -83,6 +83,7 @@ parser.add_argument('--dist-backend', default='gloo', type=str,
 
 best_prec1 = 0
 outf_mean=open('mean_error.txt','w')
+outf_high=open('persian_high.txt','w')
 
 
 def main():
@@ -160,25 +161,20 @@ def main():
             transforms.ToTensor(),
             normalize,
         ]))
-
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
     else:
         train_sampler = None
+
+    val_sampler = torch.utils.data.SubsetRandomSampler([31])
 
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
         num_workers=args.workers, pin_memory=True, sampler=train_sampler)
 
     val_loader = torch.utils.data.DataLoader(
-        datasets.ImageFolder(valdir, transforms.Compose([
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-            normalize,
-        ])),
-        batch_size=args.batch_size, shuffle=False,
-        num_workers=args.workers, pin_memory=True)
+        train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
+        num_workers=args.workers, pin_memory=True, sampler=val_sampler)
 
     if args.evaluate:
         #validate(val_loader, model, criterion2)
@@ -190,6 +186,7 @@ def main():
         adjust_learning_rate(optimizer, epoch)
 
         # train for one epoch
+        validate(val_loader,model)
         train(train_loader, model, criterion_, criterion2_, optimizer, epoch)
     torch.save(model.module.state_dict(),'mytraining.pt')
 
@@ -249,45 +246,22 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
             outf_mean.write(str(losses.avg)+'\n')
 
 
-def validate(val_loader, model, criterion):
-    batch_time = AverageMeter()
-    losses = AverageMeter()
-    top1 = AverageMeter()
-    top5 = AverageMeter()
-
-    # switch to evaluate mode
+def validate(val_loader, model):
     model.eval()
 
-    end = time.time()
-    for i, (input, target) in enumerate(val_loader):
+    for i, datata in enumerate(val_loader):
+        (input, target), (filenam,_)=datata
         target = target.cuda(async=True)
         input_var = torch.autograd.Variable(input, volatile=True)
 
         # compute output
-        output = model(input_var)*10
-        loss = criterion(output)
+        output = model(input_var)
+        for i in range(0,8):
+            target=Variable(torch.LongTensor([31,194,140,92,63,14,43,34]))
+            loss = my_modell.myLossV(output, target[i])
+            outf_high.write(str(loss.data)+'\t')
+        outf_high.write('\n')
 
-        # measure accuracy and record loss
-        prec1, prec5 = accuracy(loss.data, target, topk=(1, 5))
-        top1.update(prec1[0], input.size(0))
-        top5.update(prec5[0], input.size(0))
-
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
-
-        if i % args.print_freq == 0:
-            print('Test: [{0}/{1}]\t'
-                  'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
-                  'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                   i, len(val_loader), batch_time=batch_time, loss=losses,
-                   top1=top1, top5=top5))
-
-    print(' * Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}'
-          .format(top1=top1, top5=top5))
-
-    return top1.avg
 
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
