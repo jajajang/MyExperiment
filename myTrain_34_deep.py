@@ -175,7 +175,7 @@ def main():
     else:
         train_sampler = None
 
-    val_sampler = torch.utils.data.distributed.DistributedSampler(val_dataset)
+    val_sampler = None
 
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
