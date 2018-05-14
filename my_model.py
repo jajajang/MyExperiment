@@ -350,5 +350,5 @@ position=Variable(2*true_pos/zetty.t(),requires_grad=False).cuda()
 position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
 
 
-zetty_all=(-th.sum(position_*position_, dim=-1).expand(z_dim,-1)+1).cuda()
+zetty_all=(-th.sum(position_*position_, dim=-1).expand(z_dim,-1)+1)
 position_all=Variable(2*position_/zetty_all.t(), requires_grad=False).cuda()
