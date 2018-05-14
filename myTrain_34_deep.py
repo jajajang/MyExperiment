@@ -166,7 +166,7 @@ def main():
     else:
         train_sampler = None
 
-    val_sampler = torch.utils.data.SubsetRandomSampler([31])
+    val_sampler = torch.utils.data.sampler.SubsetRandomSampler(train_dataset, [31])
 
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
