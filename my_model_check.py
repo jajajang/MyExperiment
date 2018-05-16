@@ -35,5 +35,5 @@ position=Variable(2*true_pos/zetty.t(),requires_grad=False)
 position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
 
 assy = th.zeros(len(position_),z_dim)
-zetty_all=-th.sum(position_*position*, dim=-1).expand(z_dim,-1)+1
+zetty_all=-th.sum(position_*position_, dim=-1).expand(z_dim,-1)+1
 position_all=Variable(2*position_/zetty_all.t(), requires_grad=False)
