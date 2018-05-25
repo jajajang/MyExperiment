@@ -295,6 +295,19 @@ class myLoss(Moddy._WeightedLoss):
         inner=(th.sum(input*position[target.data], dim=-1))
         return th.sum(self.ruler(zet*position_zet[target.data]-inner).cuda())
 
+class myLossL(Moddy._WeightedLoss):
+
+    ruler=Arcosh()
+    def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
+        super(myLossL, self).__init__(weight, size_average)
+        self.ignore_index = ignore_index
+        self.reduce = reduce
+    def forward(self, input, target,level):
+        Moddy._assert_no_grad(target)
+        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
+        inner=(th.sum(input*position_[categorize[level][target.data]], dim=-1))
+        return th.sum(self.ruler(zet*position_all_zet[categorize[level][target.data]]-inner).cuda())
+
 class myLossV(Moddy._WeightedLoss):
 
     ruler=Arcosh()
@@ -353,3 +366,40 @@ position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
 zetty_all=(-th.sum(position_*position_, dim=-1).expand(z_dim,-1)+1)
 position_all=Variable(2*position_/zetty_all.t(), requires_grad=False).cuda()
 position_all_zet= (th.sqrt(th.sum(position_all*position_all, dim=-1)+1))
+
+
+synsetss=[0]*len(obj)
+for i in range(0,len(obj)):
+    synsetss[i]=wn.synset(obj[i])
+
+
+level=[0]*len(obj)
+for i in range(0,len(obj)):
+    pathy=synsetss[i].hypernym_paths()[0]
+    for j in range(0,len(obj)):
+        if synsetss[j] in pathy:
+            level[i]+=1
+
+bitbit=[0]*7
+for i in range(2,7):
+    bitbit[i]=[j for j,x in enumerate(level) if x==i]
+
+ordy=[0]*200
+for i in range(0,200):
+    ordy[i]=wn.synset(ordered_word[i])
+
+categorize=[0]*7
+for i in range(0,7):
+    categorize[i]=[0]*200
+
+for s in range(2,6):
+    for i in range(0,200):
+        pathy=ordy[i].hypernym_paths()[0]
+        for j in bitbit[s]:
+            if synsetss[j] in pathy:
+                categorize[s][i]=j
+
+for i in range(0,200):
+    categorize[6][i]=obj.index(ordered_word[i])
+
+categorize=th.LongTensor(categorize)
