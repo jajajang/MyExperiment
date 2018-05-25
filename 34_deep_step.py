@@ -116,9 +116,8 @@ def main():
         model = torch.nn.parallel.DistributedDataParallel(model)
 
     # define loss function (criterion) and optimizer
-    criterion_ = my_modell.myLoss().cuda()
+    criterion_ = my_modell.myLossL().cuda()
     criterion2_ = my_modell.myLossA().cuda()
-    criterionv_ = my_modell.myLossV().cuda()
 
     if args.pretrained:
         ignored_params = list(map(id, model.module.fc_mine.parameters()))
@@ -189,18 +188,18 @@ def main():
     if args.evaluate:
         #validate(val_loader, model, criterion2)
         return
-
+    level=2
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
-        adjust_learning_rate(optimizer, epoch)
-
+        if epoch%100==0:
+            level=level+1
+        adjust_learning_rate(optimizer, epoch%100)
         # train for one epoch
-        validate(val_loader,model,criterionv_)
-        train(train_loader, model, criterion_, criterion2_, optimizer, epoch)
+        train(train_loader, model, criterion_, criterion2_, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
 
-def train(train_loader, model, criterion, criterion2, optimizer, epoch):
+def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -223,7 +222,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
         # compute output
         output = model(input_var)
 
-        loss = criterion(output, target_var)
+        loss = criterion(output, target_var, level)
         output2 = criterion2(output)
 
         # measure accuracy and record loss
@@ -252,24 +251,6 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch):
                    data_time=data_time, loss=losses, top1=top1, top5=top5))
             outf_mean.write(str(losses.avg)+'\n')
 
-
-
-def validate(val_loader, model,criterion):
-    model.eval()
-
-    for i, datata in enumerate(val_loader):
-        (input, target), (filenam,_)=datata
-        target = target.cuda(async=True)
-        input_var = torch.autograd.Variable(input, volatile=True)
-
-        # compute output
-        output = model(input_var)
-        for i in range(0,12):
-            #target=Variable(torch.LongTensor([31,194,140,92,63,14,43,34])).cuda()
-            target=[130,194,140,92,63,14,43,34,30,3,1,15]
-            loss = criterion(output, target[i])
-            outf_high.write(str(loss.data.cpu().numpy()[0])+'\t')
-        outf_high.write('\n')
 
 
 
