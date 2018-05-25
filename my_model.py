@@ -403,4 +403,4 @@ for s in range(2,6):
 for i in range(0,200):
     categorize[6][i]=obj.index(ordered_word[i])
 
-categorize=th.LongTensor(categorize)
+categorize=th.LongTensor(categorize).cuda()
