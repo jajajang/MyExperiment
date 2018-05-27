@@ -305,6 +305,7 @@ class myLossL(Moddy._WeightedLoss):
     def forward(self, input, target,level):
         Moddy._assert_no_grad(target)
         levy=categorize[level]
+        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
         inner=(th.sum(input*position_all[levy[target.data]], dim=-1))
         return th.sum(self.ruler(zet*position_all_zet[categorize[level][target.data]]-inner).cuda())
 
