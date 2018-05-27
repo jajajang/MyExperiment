@@ -192,9 +192,9 @@ def main():
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
-        if epoch%100==0:
+        if epoch%200==0:
             level=level+1
-        adjust_learning_rate(optimizer, epoch%100)
+        adjust_learning_rate(optimizer, epoch%200)
         # train for one epoch
         train(train_loader, model, criterion_, criterion2_, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
