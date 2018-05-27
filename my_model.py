@@ -368,7 +368,7 @@ position_zet= (th.sqrt(th.sum(position*position, dim=-1)+1))
 
 zetty_all=(-th.sum(position_*position_, dim=-1).expand(z_dim,-1)+1)
 position_all=Variable(2*position_/zetty_all.t(), requires_grad=False).cuda()
-position_all_zet= (th.sqrt(th.sum(position_all*position_all, dim=-1)+1))
+position_all_zet= (th.sqrt(th.sum(position_all*position_all, dim=-1)+1)).cuda()
 
 
 synsetss=[0]*len(obj)
