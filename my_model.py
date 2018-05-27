@@ -308,7 +308,7 @@ class myLossL(Moddy._WeightedLoss):
         print levy
         print levy[target.data]
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
-        inner=(th.sum(input*position_[levy[target.data]], dim=-1))
+        inner=(th.sum(input*position_all[levy[target.data]], dim=-1))
         return th.sum(self.ruler(zet*position_all_zet[categorize[level][target.data]]-inner).cuda())
 
 class myLossV(Moddy._WeightedLoss):
