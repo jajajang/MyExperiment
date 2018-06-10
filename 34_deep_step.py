@@ -83,7 +83,7 @@ parser.add_argument('--dist-backend', default='gloo', type=str,
 
 best_prec1 = 0
 outf_mean=open('mean_error.txt','w')
-outf_high=open('persian_high.txt','w')
+outf_whole=open('bitbit.txt','w')
 
 
 def main():
@@ -118,6 +118,7 @@ def main():
     # define loss function (criterion) and optimizer
     criterion_ = my_modell.myLossL().cuda()
     criterion2_ = my_modell.myLossA().cuda()
+    criterion3_ = my_modell.myLoss().cuda()
 
     if args.pretrained:
         ignored_params = list(map(id, model.module.fc_mine.parameters()))
@@ -188,18 +189,19 @@ def main():
     if args.evaluate:
         #validate(val_loader, model, criterion2)
         return
-    level=2
+    level=3
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
         if epoch%200==0:
             level=level+1
+            print 'Hello world!'+str(level)
         adjust_learning_rate(optimizer, epoch%200)
         # train for one epoch
-        train(train_loader, model, criterion_, criterion2_, optimizer, epoch, level)
+        train(train_loader, model, criterion_, criterion2_, criterion3_, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
 
-def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
+def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epoch, level):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -223,6 +225,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         output = model(input_var)
 
         loss = criterion(output, target_var, level)
+        forprint = criterion3(output, target_var)
         output2 = criterion2(output)
 
         # measure accuracy and record loss
@@ -250,6 +253,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
                    epoch, i, len(train_loader), batch_time=batch_time,
                    data_time=data_time, loss=losses, top1=top1, top5=top5))
             outf_mean.write(str(losses.avg)+'\n')
+            outf_whole.write(str(forprint)+'\n')
 
 
 

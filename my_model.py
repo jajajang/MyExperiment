@@ -381,19 +381,19 @@ for i in range(0,len(obj)):
         if synsetss[j] in pathy:
             level[i]+=1
 
-bitbit=[0]*7
-for i in range(2,7):
+bitbit=[0]*12
+for i in range(2,12):
     bitbit[i]=[j for j,x in enumerate(level) if x==i]
 
 ordy=[0]*200
 for i in range(0,200):
     ordy[i]=wn.synset(ordered_word[i])
 
-categorize=[0]*7
-for i in range(0,7):
+categorize=[0]*12
+for i in range(0,12):
     categorize[i]=[0]*200
 
-for s in range(2,6):
+for s in range(2,12):
     for i in range(0,200):
         pathy=ordy[i].hypernym_paths()[0]
         for j in bitbit[s]:
