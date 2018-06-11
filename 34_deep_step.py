@@ -189,7 +189,7 @@ def main():
     if args.evaluate:
         #validate(val_loader, model, criterion2)
         return
-    level=3
+    level=4
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
