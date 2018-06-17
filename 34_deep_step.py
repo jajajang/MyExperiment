@@ -103,7 +103,9 @@ def main():
 
     else:
         print("=> creating model '{}'".format(args.arch))
-        model = my_modell.myResnet34deep()
+        #model = my_modell.myResnet34deep()
+        model = my_modell.myResnet18(pretrained=True)
+
 
     if not args.distributed:
         if args.arch.startswith('alexnet') or args.arch.startswith('vgg'):
@@ -196,7 +198,7 @@ def main():
         if epoch%200==0:
             level=level+1
             print 'Hello world!'+str(level)
-        adjust_learning_rate(optimizer, epoch%200)
+        adjust_learning_rate(optimizer, epoch%200*(0.5**(level-5)))
         # train for one epoch
         train(train_loader, model, criterion_, criterion2_, criterion3_, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
