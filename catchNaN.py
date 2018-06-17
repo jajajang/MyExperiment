@@ -227,7 +227,7 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
 
         loss = criterion(output, target_var, level)
         output2 = criterion2(output)
-        if torch.isnan(loss.cpu()):
+        if loss.cpu()!=loss.cpu():
             outf_nan.write('\n')
             outf_nan.write('input : \n'+str(target))
             outf_nan.write('output : \n'+str(output))
