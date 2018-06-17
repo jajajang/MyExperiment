@@ -396,11 +396,12 @@ for i in range(0,12):
 for s in range(2,12):
     for i in range(0,200):
         pathy=ordy[i].hypernym_paths()[0]
+        tik=True
         for j in bitbit[s]:
             if synsetss[j] in pathy:
                 categorize[s][i]=j
-
-for i in range(0,200):
-    categorize[6][i]=obj.index(ordered_word[i])
+                tik=False
+            if tik:
+                categorize[s][i]=categorize[s-1][i]    
 
 categorize=th.LongTensor(categorize).cuda()
