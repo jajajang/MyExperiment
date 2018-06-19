@@ -228,9 +228,12 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
         loss = criterion(output, target_var, level)
         output2 = criterion2(output)
         if (loss.cpu()!=loss.cpu()).any():
-            outf_nan.write('\n')
-            outf_nan.write('input : \n'+str(categorize[level][target]))
-            outf_nan.write('output : \n'+str(output))
+            for ss in range(args.batch_size):
+                ass=criterion(output[ss],target_var[ss],level)
+                if (ass.cpu()!=ass.cpu()).any():
+                    outf_nan.write('\n')
+                    outf_nan.write('input : \n'+str(categorize[level][target[ss]]))
+                    outf_nan.write('output : \n'+str(output[ss]))
 
         # measure accuracy and record loss
         prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
