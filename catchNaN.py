@@ -229,7 +229,7 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
         output2 = criterion2(output)
         if (loss.cpu()!=loss.cpu()).any():
             outf_nan.write('\n')
-            outf_nan.write('input : \n'+str(target))
+            outf_nan.write('input : \n'+str(categorize[level][target]))
             outf_nan.write('output : \n'+str(output))
 
         # measure accuracy and record loss
