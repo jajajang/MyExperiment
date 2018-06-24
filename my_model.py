@@ -299,7 +299,7 @@ class myLossC(Moddy._WeightedLoss):
 
     ruler=Arcosh()
     def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
-        super(myLoss, self).__init__(weight, size_average)
+        super(myLossC, self).__init__(weight, size_average)
         self.ignore_index = ignore_index
         self.reduce = reduce
     def forward(self, input):
