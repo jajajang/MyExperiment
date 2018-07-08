@@ -121,7 +121,7 @@ def main():
     # define loss function (criterion) and optimizer
     criterion_ = my_modell.myLossL().cuda()
     criterion2_ = my_modell.myLossA().cuda()
-    criterion3_ = my_modell.myLoss().cuda()
+    criterion3_ = my_modell.myLossTime().cuda()
     criterionC_ = my_modell.myLossC().cuda()
 
     if args.pretrained:
@@ -202,7 +202,7 @@ def main():
             print 'Hello world!'+str(level)
         adjust_learning_rate(optimizer, epoch%200*(0.5**(level-5)))
         # train for one epoch
-        train(train_loader, model, criterion_, criterion2_, criterionC_, optimizer, epoch, level)
+        train(train_loader, model, criterion_, criterion2_, criterion3_, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
 
 def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epoch, level):
