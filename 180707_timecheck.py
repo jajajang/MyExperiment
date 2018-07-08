@@ -247,6 +247,7 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
+        print loss
         loss.backward()
         optimizer.step()
 
