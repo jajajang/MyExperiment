@@ -308,6 +308,7 @@ class myLossTime(Moddy._WeightedLoss):
         resulty = th.sum(self.ruler(th.clamp(zet*position_zet[target.data]-inner,min=1).cuda()))
         fth=time.time()
         return resulty, fst, snd, trd, fth
+
 class myLossC(Moddy._WeightedLoss):
 
     ruler=Arcosh()
@@ -339,7 +340,7 @@ class myLossL(Moddy._WeightedLoss):
                 print position_all[levy[target.data[i]]]
                 print 'Output : '
                 print input[i]
-        return resulty
+        return th.sum(resulty)
 
 class myLossV(Moddy._WeightedLoss):
 
