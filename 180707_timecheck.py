@@ -232,7 +232,7 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
         output = model(input_var)
 
         loss = criterion(output, target_var, level)
-        forprint, fst, snd, trd, fth = criterion3(output)
+        forprint, fst, snd, trd, fth = criterion3(output, target_var)
         output2 = criterion2(output)
 
         # measure accuracy and record loss
