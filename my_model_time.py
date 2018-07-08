@@ -333,8 +333,8 @@ class myLossL(Moddy._WeightedLoss):
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
         inner=(th.sum(input*position_all[levy[target.data]], dim=-1))
         resulty=th.sum(self.ruler(th.clamp(zet*position_all_zet[categorize[level][target.data]]-inner,min=1+eps)).cuda())
-        isnany=th.isnan(resulty)
-        for i, tf in enumerate(isnany):
+        print th.isnan(resulty.data)
+        for i, tf in enumerate(th.isnan(resulty.data)):
             if tf:
                 print 'Target : '
                 print position_all[levy[target.data[i]]]
