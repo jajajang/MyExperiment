@@ -269,7 +269,7 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
                   'time12 {time12.val:.4f} ({time12.avg:.4f})\t'
                   'time23 {time23.val:.4f} ({time23.avg:.4f})\t'
                   'time34 {time34.val:.4f} ({time34.avg:.4f})'.format(
-                   epoch, i, len(train_loader), batch_time=batch_time,
+                   epoch, i, len(train_loader), batch_time=batch_time, input_time=input_time,
                    data_time=data_time, loss=losses, top1=top1, top5=top5, time12=time_12, time23=time_23, time34=time_34))
             outf_center.write(str(forprint)+'\n')
             outf_time.write(str(snd-fst)+'\t'+str(trd-snd)+'\t'+str(fth-trd)+'\n')
