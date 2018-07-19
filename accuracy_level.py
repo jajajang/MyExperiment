@@ -238,7 +238,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         optimizer.step()
 
         if epoch%50==0:
-            output2 = criterion(output, level)
+            output2 = criterion2(output, level)
             prec1, prec5 = accuracy_level(output2.data, target, level, topk=(1, 5))
             top1.update(prec1[0], input.size(0))
             top5.update(prec5[0], input.size(0))
