@@ -16,7 +16,7 @@ import torch.multiprocessing as mp
 from sklearn.metrics import average_precision_score
 from torch.autograd import Variable
 
-import my_model_time as my_modell
+import my_model as my_modell
 
 import argparse
 import os
@@ -84,7 +84,6 @@ parser.add_argument('--dist-backend', default='gloo', type=str,
 best_prec1 = 0
 outf_mean=open('mean_error.txt','w')
 outf_center=open('centy.txt','w')
-outf_time=open('time.txt', 'w')
 
 
 def main():
@@ -120,8 +119,8 @@ def main():
 
     # define loss function (criterion) and optimizer
     criterion_ = my_modell.myLossL().cuda()
-    criterion2_ = my_modell.myLossA().cuda()
-    criterion3_ = my_modell.myLossTime().cuda()
+    criterion2_ = my_modell.myLossAL().cuda()
+    criterion3_ = my_modell.myLoss().cuda()
     criterionC_ = my_modell.myLossC().cuda()
 
     if args.pretrained:
@@ -193,7 +192,7 @@ def main():
     if args.evaluate:
         #validate(val_loader, model, criterion2)
         return
-    level=4
+    level=5
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
@@ -202,19 +201,16 @@ def main():
             print 'Hello world!'+str(level)
         adjust_learning_rate(optimizer, epoch%200*(0.5**(level-5)))
         # train for one epoch
-        train(train_loader, model, criterion_, criterion2_, criterion3_, optimizer, epoch, level)
+        train(train_loader, model, criterion_, criterion2_, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
 
-def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epoch, level):
+def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
-    time_12 = AverageMeter()
-    time_23 = AverageMeter()
-    time_34 = AverageMeter()
-    
+
     # switch to train mode
     model.train()
 
@@ -229,27 +225,27 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
         target_var = torch.autograd.Variable(target)
 
         # compute output
-        
         output = model(input_var)
 
         loss = criterion(output, target_var, level)
-        forprint, fst, snd, trd, fth = criterion3(output, target_var)
-        output2 = criterion2(output)
 
         # measure accuracy and record loss
-        prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
         losses.update(loss.data[0], input.size(0))
-        top1.update(prec1[0], input.size(0))
-        top5.update(prec5[0], input.size(0))
-        time_12.update(snd-fst)
-        time_23.update(trd-snd)
-        time_34.update(fth-trd)
-        
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
+        if epoch%50==0:
+            output2 = criterion(output, level)
+            prec1, prec5 = accuracy_level(output2.data, target, level, topk=(1, 5))
+            top1.update(prec1[0], input.size(0))
+            top5.update(prec5[0], input.size(0))
+            if i % args.print_freq ==0:
+                print('Top1 {top1.avg:.3f}\t'
+                'Top5 {top5.avg:.3f}\t'.format(top1=top1, top5=top5))
+
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -259,18 +255,9 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
             print('Epoch: [{0}][{1}/{2}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                  'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
-                  'Prec@5 {top5.val:.3f} ({top5.avg:.3f})\t'
-                  'time12 {time12.val:.4f} ({time12.avg:.4f})\t'
-                  'time23 {time23.val:.4f} ({time23.avg:.4f})\t'
-                  'time34 {time34.val:.4f} ({time34.avg:.4f})'.format(
+                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(
                    epoch, i, len(train_loader), batch_time=batch_time,
-                   data_time=data_time, loss=losses, top1=top1, top5=top5, time12=time_12, time23=time_23, time34=time_34))
-            outf_center.write(str(forprint)+'\n')
-            outf_time.write(str(snd-fst)+'\t'+str(trd-snd)+'\t'+str(fth-trd)+'\n')
-
-
+                   data_time=data_time, loss=losses))
 
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
@@ -317,6 +304,31 @@ def accuracy(output, target, topk=(1,)):
     for k in topk:
         correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
         res.append(correct_k.mul_(100.0 / batch_size))
+    return res
+
+def accuracy_level(output, target, level, topk=(1,)):
+    """Computes the precision@k for the specified values of k"""
+    """This function cares for same elements"""
+    round_dist=th.FloatTensor(np.round(output.numpy(),decimals=4))
+    maxk = max(topk)
+    batch_size = target.size(0)
+
+    perf_targ=my_modell.categorize[level][target]
+    correct_slot=[0]*maxk
+
+    for i in range(0, batch_size):
+        for topi in range(0,k):
+            _, treat_index=round_dist[i].unique(sorted=True, return_inverse=True)
+            first_guy=(treat_index==topi).nonzero()[0][0]
+            if modell.categorize[level][first_guy]==perf_targ[i]:
+                correct_slot[topi]+=1
+    
+    res = []
+    for k in topk:
+        correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
+        res.append(correct_k.mul_(100.0 / batch_size))
+    return res
+
     return res
 
 

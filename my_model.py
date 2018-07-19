@@ -350,6 +350,16 @@ class myLossA(Moddy._WeightedLoss):
             resulty[j]=-self.ruler(beep).cuda()
         return resulty.t()
 
+class myLossAL(Moddy._WeightedLoss):
+    ruler=Arcosh()
+    def forward(self, input, level):
+        resulty=Variable(th.cuda.FloatTensor(position.size()[0],input.size()[0]))
+        for j in range(0,position.size()[0]):
+            zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
+            beep= zet*position_zet[j]-th.sum(input*position[categorize[level][j]], dim=-1)
+            resulty[j]=-self.ruler(beep).cuda()
+        return resulty.t()
+
 indy_mix=[]
 ordered_word=[]
 f=open('wnids.txt','r')
