@@ -356,8 +356,9 @@ class myLossAL(Moddy._WeightedLoss):
         resulty=Variable(th.cuda.FloatTensor(position.size()[0],input.size()[0]))
         for j in range(0,position.size()[0]):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
-            beep= zet*position_zet[j]-th.sum(input*position[categorize[level][j]], dim=-1)
-            resulty[j]=-self.ruler(beep).cuda()
+            beep= zet*position_all_zet[categorize[level][j]]-th.sum(input*position_all[categorize[level][j]], dim=-1)
+            #here, no minus because I don't use topk shit
+            resulty[j]=self.ruler(beep).cuda()
         return resulty.t()
 
 indy_mix=[]
