@@ -325,7 +325,7 @@ def accuracy_level(output, target, level, topk=(1,)):
     
     res = []
     for k in topk:
-        correct_k = correct_slot[:k].view(-1).float().sum(0, keepdim=True)
+        correct_k = sum(correct_slot[:k])
         res.append(correct_k.mul_(100.0 / batch_size))
     return res
 
