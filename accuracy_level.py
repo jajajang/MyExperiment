@@ -309,7 +309,7 @@ def accuracy(output, target, topk=(1,)):
 def accuracy_level(output, target, level, topk=(1,)):
     """Computes the precision@k for the specified values of k"""
     """This function cares for same elements"""
-    round_dist=th.FloatTensor(np.round(output.numpy(),decimals=4))
+    round_dist=th.FloatTensor(np.round(output.cpu().numpy(),decimals=4))
     maxk = max(topk)
     batch_size = target.size(0)
 
