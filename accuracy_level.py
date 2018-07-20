@@ -326,7 +326,7 @@ def accuracy_level(output, target, level, topk=(1,)):
     res = []
     for k in topk:
         correct_k = sum(correct_slot[:k])
-        res.append(correct_k.mul_(100.0 / batch_size))
+        res.append(correct_k*(100.0 / batch_size))
     return res
 
     return res
