@@ -320,12 +320,12 @@ def accuracy_level(output, target, level, topk=(1,)):
         for topi in range(0,maxk):
             _, treat_index=round_dist[i].unique(sorted=True, return_inverse=True)
             first_guy=(treat_index==topi).nonzero()[0][0]
-            if modell.categorize[level][first_guy]==perf_targ[i]:
+            if my_modell.categorize[level][first_guy]==perf_targ[i]:
                 correct_slot[topi]+=1
     
     res = []
     for k in topk:
-        correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
+        correct_k = correct_slot[:k].view(-1).float().sum(0, keepdim=True)
         res.append(correct_k.mul_(100.0 / batch_size))
     return res
 
