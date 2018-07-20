@@ -317,7 +317,7 @@ def accuracy_level(output, target, level, topk=(1,)):
     correct_slot=[0]*maxk
 
     for i in range(0, batch_size):
-        for topi in range(0,k):
+        for topi in range(0,maxk):
             _, treat_index=round_dist[i].unique(sorted=True, return_inverse=True)
             first_guy=(treat_index==topi).nonzero()[0][0]
             if modell.categorize[level][first_guy]==perf_targ[i]:
