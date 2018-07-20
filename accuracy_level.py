@@ -240,11 +240,9 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         if epoch%50==0:
             output2 = criterion2(output, level)
             prec1, prec5 = accuracy_level(output2.data, target, level, topk=(1, 5))
-            top1.update(prec1[0], input.size(0))
-            top5.update(prec5[0], input.size(0))
             if i % args.print_freq ==0:
-                print('Top1 {top1.avg:.3f}\t'
-                'Top5 {top5.avg:.3f}\t'.format(top1=top1, top5=top5))
+                print('Top1 {top1:.3f}\t'
+                'Top5 {top5:.3f}\t'.format(top1=prec1, top5=prec5))
 
 
         # measure elapsed time
@@ -327,8 +325,6 @@ def accuracy_level(output, target, level, topk=(1,)):
     for k in topk:
         correct_k = sum(correct_slot[:k])
         res.append(correct_k*(100.0 / batch_size))
-    return res
-
     return res
 
 
