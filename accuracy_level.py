@@ -238,8 +238,8 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         optimizer.step()
 
         if epoch%50==0:
-            output2 = criterion2(output, level)
             for levy in range(5,10):
+                output2 = criterion2(output, levy)
                 prec1, prec5 = accuracy_level(output2.data, target, levy, topk=(1, 5))
                 if i % args.print_freq ==0:
                     print('Level {levy} - Top1 {top1:.3f}\t'
@@ -321,8 +321,6 @@ def accuracy_level(output, target, level, topk=(1,)):
             first_guy=(treat_index==topi).nonzero()[0][0]
             if my_modell.categorize[level][first_guy]==perf_targ[i]:
                 correct_slot[topi]+=1
-    print batch_size
-    print correct_slot
     res = []
     for k in topk:
         correct_k = sum(correct_slot[:k])
