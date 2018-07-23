@@ -252,9 +252,10 @@ def train(train_loader, model, criterion, criterion2, criterion3, optimizer, epo
                   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
                   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                   'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
+                  'forprint {forprint:.3f}\t'
                   'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
                    epoch, i, len(train_loader), batch_time=batch_time,
-                   data_time=data_time, loss=losses, top1=top1, top5=top5))
+                   data_time=data_time, loss=losses, top1=top1, top5=top5, forprint=forprint))
             outf_center.write(str(forprint)+'\n')
 
 

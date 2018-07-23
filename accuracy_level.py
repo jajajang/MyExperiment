@@ -237,7 +237,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         loss.backward()
         optimizer.step()
 
-        if epoch%50==0:
+        if epoch%20==19:
             for levy in range(5,10):
                 output2 = criterion2(output, levy)
                 prec1, prec5 = accuracy_level(output2.data, target, levy, topk=(1, 5))
