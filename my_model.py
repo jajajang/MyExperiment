@@ -293,18 +293,14 @@ class myLoss(Moddy._WeightedLoss):
         Moddy._assert_no_grad(target)
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
         inner=(th.sum(input*position[target.data], dim=-1))
-        return th.sum(self.ruler(th.clamp(zet*position_zet[target.data]-inner,min=1).cuda()))
+        return th.sum(self.ruler(th.clamp(zet*position_zet[target.data]-inner,min=1+eps).cuda()))
 
 class myLossC(Moddy._WeightedLoss):
 
     ruler=Arcosh()
-    def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
-        super(myLossC, self).__init__(weight, size_average)
-        self.ignore_index = ignore_index
-        self.reduce = reduce
     def forward(self, input):
-        zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
-        return th.mean(self.ruler(zet).cuda())
+        zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
+        return th.mean(self.ruler(th.clamp(zet,min=1+eps).cuda()))
 
 
 class myLossL(Moddy._WeightedLoss):
@@ -319,7 +315,7 @@ class myLossL(Moddy._WeightedLoss):
         levy=categorize[level]
         zet=((th.sqrt(th.sum(input*input, dim=-1)+1)))
         inner=(th.sum(input*position_all[levy[target.data]], dim=-1))
-        return th.sum(self.ruler(zet*position_all_zet[categorize[level][target.data]]-inner).cuda())
+        return th.sum(self.ruler(th.clamp(zet*position_all_zet[categorize[level][target.data]]-inner,min=1+eps).cuda()))
 
 class myLossV(Moddy._WeightedLoss):
 
