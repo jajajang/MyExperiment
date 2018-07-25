@@ -237,13 +237,15 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         loss.backward()
         optimizer.step()
 
-        if epoch%20==19:
+        if epoch%200>180:
             for levy in range(5,10):
                 output2 = criterion2(output, levy)
                 prec1, prec5 = accuracy_level(output2.data, target, levy, topk=(1, 5))
+                top1.update(prec1)
+                top5.update(prec5)
                 if i % args.print_freq ==0:
-                    print('Level {levy} - Top1 {top1:.3f}\t'
-                    'Top5 {top5:.3f}\t'.format(levy=levy, top1=prec1, top5=prec5))
+                    print('Level {levy} - Top1 {top1.val:.3f}({top1.avg:.3f})\t'
+                    'Top5 {top5.val:.3f}({top5.avg:.3f})\t'.format(levy=levy, top1=top1, top5=top5))
 
 
         # measure elapsed time
