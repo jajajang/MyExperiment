@@ -208,8 +208,11 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
-    top1 = AverageMeter()
-    top5 = AverageMeter()
+    top1 = [0]*13
+    top5 = [0]*13
+    for i in range(0,13):
+        top1[i]=AverageMeter()
+        top5[i]=AverageMeter()
 
     # switch to train mode
     model.train()
@@ -237,15 +240,15 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         loss.backward()
         optimizer.step()
 
-        if epoch%200>180:
-            for levy in range(5,10):
+        if (epoch%200>180) or (epoch%200<20):
+            for levy in range(5,13):
                 output2 = criterion2(output, levy)
                 prec1, prec5 = accuracy_level(output2.data, target, levy, topk=(1, 5))
-                top1.update(prec1)
-                top5.update(prec5)
+                top1[levy].update(prec1)
+                top5[levy].update(prec5)
                 if i % args.print_freq ==0:
                     print('Level {levy} - Top1 {top1.val:.3f}({top1.avg:.3f})\t'
-                    'Top5 {top5.val:.3f}({top5.avg:.3f})\t'.format(levy=levy, top1=top1, top5=top5))
+                    'Top5 {top5.val:.3f}({top5.avg:.3f})\t'.format(levy=levy, top1=top1[levy], top5=top5[levy]))
 
 
         # measure elapsed time
