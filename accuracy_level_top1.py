@@ -243,7 +243,7 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         if (epoch%200>180) or (epoch%200<20):
             for levy in range(6,13):
                 output2 = criterion2(output, levy)
-                prec1, prec5 = accuracy_level(output2.data, target, levy, topk=(1,5))
+                prec1, prec5 = accuracy_level(output2.data, target, levy, topk=[1])
                 top1[levy].update(prec1)
                 top5[levy].update(prec5)
                 if i % args.print_freq ==0:
