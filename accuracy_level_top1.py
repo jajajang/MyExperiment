@@ -243,12 +243,10 @@ def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
         if (epoch%200>180) or (epoch%200<20):
             for levy in range(6,13):
                 output2 = criterion2(output, levy)
-                prec1, prec5 = accuracy_level(output2.data, target, levy)
+                prec1= accuracy_level(output2.data, target, levy)
                 top1[levy].update(prec1)
-                top5[levy].update(prec5)
                 if i % args.print_freq ==0:
-                    print('Level {levy} - Top1 {top1.val:.3f}({top1.avg:.3f})\t'
-                    'Top5 {top5.val:.3f}({top5.avg:.3f})\t'.format(levy=levy, top1=top1[levy], top5=top5[levy]))
+                    print('Level {levy} - Top1 {top1.val:.3f}({top1.avg:.3f})\t'.format(levy=levy, top1=top1[levy]))
 
 
         # measure elapsed time
