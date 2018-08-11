@@ -369,7 +369,7 @@ class myLossEucAL(Moddy._WeightedLoss):
     def forward(self, input, level):
         resulty=Variable(th.cuda.FloatTensor(position.size()[0],input.size()[0]))
         for j in range(0,position.size()[0]):
-            diff=(input.t()-position_all[categorize[level][j]]).t()
+            diff=input-position_all[categorize[level][j]]
             beep=th.sum(diff*diff, dim=-1)
             #here, no minus because I don't use topk shit
             resulty[j]=beep
