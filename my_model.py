@@ -322,7 +322,7 @@ class myLossEuc(Moddy._WeightedLoss):
     def forward(self, input, target,level):
         Moddy._assert_no_grad(target)
         levy=categorize[level]
-        diff=input-levy[target.data]
+        diff=input-levy[target.data].t()
         return th.sum(diff*diff)
 
 class myLossV(Moddy._WeightedLoss):
