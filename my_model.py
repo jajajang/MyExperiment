@@ -317,6 +317,19 @@ class myLossL(Moddy._WeightedLoss):
         inner=(th.sum(input*position_all[levy[target.data]], dim=-1))
         return th.sum(self.ruler(th.clamp(zet*position_all_zet[categorize[level][target.data]]-inner,min=1+eps).cuda()))
 
+class myLossEuc(Moddy._WeightedLoss):
+
+    ruler=Arcosh()
+    def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
+        super(myLossL, self).__init__(weight, size_average)
+        self.ignore_index = ignore_index
+        self.reduce = reduce
+    def forward(self, input, target,level):
+        Moddy._assert_no_grad(target)
+        levy=categorize[level]
+        diff=input-levy[target.data]
+        return th.sum(diff*diff)
+
 class myLossV(Moddy._WeightedLoss):
 
     ruler=Arcosh()
@@ -356,6 +369,18 @@ class myLossAL(Moddy._WeightedLoss):
             #here, no minus because I don't use topk shit
             resulty[j]=self.ruler(beep).cuda()
         return resulty.t()
+
+
+class myLossEucAL(Moddy._WeightedLoss):
+    def forward(self, input, level):
+        resulty=Variable(th.cuda.FloatTensor(position.size()[0],input.size()[0]))
+        for j in range(0,position.size()[0]):
+            diff=input-position_all[categorize[level][j]]
+            beep=th.sum(diff*diff, dim=-1)
+            #here, no minus because I don't use topk shit
+            resulty[j]=beep
+        return resulty.t()
+
 
 indy_mix=[]
 ordered_word=[]
