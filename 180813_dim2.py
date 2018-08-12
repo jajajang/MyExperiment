@@ -16,7 +16,7 @@ import torch.multiprocessing as mp
 from sklearn.metrics import average_precision_score
 from torch.autograd import Variable
 
-import 180813_my_model_2dim as my_modell
+import my_model_2dim as my_modell
 
 import argparse
 import os
