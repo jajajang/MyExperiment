@@ -223,7 +223,7 @@ def train(train_loader, model, criterion, optimizer, epoch, level):
         # compute output
         output = model(input_var)
 
-        disty = criterion(output, level)
+        disty = criterion(output)
         loss=nn.CrossEntropyLoss(disty,target)
         # measure accuracy and record loss
         losses.update(loss.data[0], input.size(0))
