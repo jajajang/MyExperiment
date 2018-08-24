@@ -340,11 +340,6 @@ class myLossV(Moddy._WeightedLoss):
 
 class myLossA(Moddy._WeightedLoss):
     ruler=Arcosh()
-    def __init__(self, weight=None, size_average=True, ignore_index=-100, reduce=True):
-        super(myLossA, self).__init__(weight, size_average)
-        self.ignore_index = ignore_index
-        self.reduce = reduce
-
     def forward(self, input):
         resulty=Variable(th.cuda.FloatTensor(position.size()[0],input.size()[0]))
         for j in range(0,position.size()[0]):
@@ -352,6 +347,17 @@ class myLossA(Moddy._WeightedLoss):
             beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
             resulty[j]=-self.ruler(beep).cuda()
         return resulty.t()
+
+class myLossSoft(Moddy._WeightedLoss):
+    ruler=Arcosh()
+    def forward(self, input):
+        resulty=Variable(th.cuda.FloatTensor(position.size()[0],input.size()[0]))
+        for j in range(0,position.size()[0]):
+            zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
+            beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
+            resulty[j]=-self.ruler(beep).cuda()
+        return resulty.t()
+
 
 class myLossAL(Moddy._WeightedLoss):
     ruler=Arcosh()
