@@ -234,9 +234,11 @@ def train(train_loader, model, criterion, crossme, optimizer, epoch, level):
         loss.backward()
         optimizer.step()
 
-        if (epoch%200>180) or (epoch%200<20):
+        if (epoch%100>90) or (epoch%100<10):
             output2 = criterion(output)
             prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
+            print prec1
+            print prec5
             top1.update(prec1)
             top5.update(prec5)
             if i % args.print_freq ==0:
