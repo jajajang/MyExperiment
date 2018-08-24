@@ -119,6 +119,7 @@ def main():
 
     # define loss function (criterion) and optimizer
     criterion_ = my_modell.myLossA().cuda()
+    crossy=nn.CrossEntropyLoss().cuda()
 
     if args.pretrained:
         ignored_params = list(map(id, model.module.fc_mine.parameters()))
@@ -224,7 +225,7 @@ def train(train_loader, model, criterion, optimizer, epoch, level):
         output = model(input_var)
 
         disty = criterion(output)
-        loss=nn.CrossEntropyLoss(disty,target)
+        loss=crossy(disty,target)
         # measure accuracy and record loss
         losses.update(loss.item(), input.size(0))
 
