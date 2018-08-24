@@ -243,7 +243,7 @@ def train(train_loader, model, criterion, crossme, optimizer, epoch, level):
             top5.update(prec5)
             if i % args.print_freq ==0:
                 print('Accu - Top1 {top1.val:.3f}({top1.avg:.3f})\t'
-                'Top5 {top5.val:.3f}({top5.avg:.3f})\t'.format(top1=top1, top5=float(top5))
+                'Top5 {top5.val:.3f}({top5.avg:.3f})\t'.format(top1=top1, top5=float(top5)))
 
 
         # measure elapsed time
