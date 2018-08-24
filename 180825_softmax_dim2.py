@@ -237,13 +237,11 @@ def train(train_loader, model, criterion, crossme, optimizer, epoch, level):
         if (epoch%100>90) or (epoch%100<10):
             output2 = criterion(output)
             prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
-            print prec1
-            print prec5
             top1.update(prec1)
             top5.update(prec5)
             if i % args.print_freq ==0:
                 print('Accu - Top1 {top1.val:.3f}({top1.avg:.3f})\t'
-                'Top5 {top5.val:.3f}({top5.avg:.3f})\t'.format(top1=top1, top5=top5))
+                'Top5 {top5.val}({top5.avg})\t'.format(top1=top1, top5=top5))
 
 
         # measure elapsed time
