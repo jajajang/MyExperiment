@@ -199,10 +199,10 @@ def main():
             print 'Hello world!'+str(level)
         adjust_learning_rate(optimizer, epoch%200*(0.5**(level-5)))
         # train for one epoch
-        train(train_loader, model, criterion_, optimizer, epoch, level)
+        train(train_loader, model, criterion_, crossy, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
 
-def train(train_loader, model, criterion, optimizer, epoch, level):
+def train(train_loader, model, criterion, crossme, optimizer, epoch, level):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -225,7 +225,7 @@ def train(train_loader, model, criterion, optimizer, epoch, level):
         output = model(input_var)
 
         disty = criterion(output)
-        loss=crossy(disty,target)
+        loss=crossme(disty,target)
         # measure accuracy and record loss
         losses.update(loss.item(), input.size(0))
 
