@@ -226,7 +226,7 @@ def train(train_loader, model, criterion, optimizer, epoch, level):
         disty = criterion(output)
         loss=nn.CrossEntropyLoss(disty,target)
         # measure accuracy and record loss
-        losses.update(loss, input.size(0))
+        losses.update(loss.item(), input.size(0))
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
