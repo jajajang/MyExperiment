@@ -223,7 +223,7 @@ def train(train_loader, model, criterion, optimizer, epoch, level):
         # compute output
         output = model(input_var)
 
-        disty = criterion(output, target)
+        loss = criterion(output, target)
         # measure accuracy and record loss
         losses.update(loss.item(), input.size(0))
 
