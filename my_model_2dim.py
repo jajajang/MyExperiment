@@ -350,13 +350,14 @@ class myLossA(Moddy._WeightedLoss):
 
 class myLossSoft(Moddy._WeightedLoss):
     ruler=Arcosh()
-    def forward(self, input):
+    crossy=nn.CrossEntropyLoss()
+    def forward(self, input, target):
         resulty=Variable(th.cuda.FloatTensor(position.size()[0],input.size()[0]))
         for j in range(0,position.size()[0]):
             zet=(th.sqrt(th.sum(input*input, dim=-1)+1))
             beep= zet*position_zet[j]-th.sum(input*position[j], dim=-1)
             resulty[j]=-self.ruler(beep).cuda()
-        return resulty.t()
+        return crossy(resulty.t(), target)
 
 
 class myLossAL(Moddy._WeightedLoss):

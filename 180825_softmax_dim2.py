@@ -119,7 +119,6 @@ def main():
 
     # define loss function (criterion) and optimizer
     criterion_ = my_modell.myLossA().cuda()
-    crossy=nn.CrossEntropyLoss().cuda()
 
     if args.pretrained:
         ignored_params = list(map(id, model.module.fc_mine.parameters()))
@@ -199,10 +198,10 @@ def main():
             print 'Hello world!'+str(level)
         adjust_learning_rate(optimizer, epoch%200*(0.5**(level-5)))
         # train for one epoch
-        train(train_loader, model, criterion_, crossy, optimizer, epoch, level)
+        train(train_loader, model, criterion_, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
 
-def train(train_loader, model, criterion, crossme, optimizer, epoch, level):
+def train(train_loader, model, criterion, optimizer, epoch, level):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -224,8 +223,7 @@ def train(train_loader, model, criterion, crossme, optimizer, epoch, level):
         # compute output
         output = model(input_var)
 
-        disty = criterion(output)
-        loss=crossme(disty,target)
+        disty = criterion(output, target)
         # measure accuracy and record loss
         losses.update(loss.item(), input.size(0))
 
