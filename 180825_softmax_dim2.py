@@ -119,6 +119,7 @@ def main():
 
     # define loss function (criterion) and optimizer
     criterion_ = my_modell.myLossSoft().cuda()
+    criterion2_ = my_modell.myLossA().cuda()
 
     if args.pretrained:
         ignored_params = list(map(id, model.module.fc_mine.parameters()))
@@ -198,10 +199,10 @@ def main():
             print 'Hello world!'+str(level)
         adjust_learning_rate(optimizer, epoch%200*(0.5**(level-5)))
         # train for one epoch
-        train(train_loader, model, criterion_, optimizer, epoch, level)
+        train(train_loader, model, criterion_, criterion2_, optimizer, epoch, level)
     torch.save(model.module.state_dict(),'mytraining.pt')
 
-def train(train_loader, model, criterion, optimizer, epoch, level):
+def train(train_loader, model, criterion, criterion2, optimizer, epoch, level):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -233,7 +234,7 @@ def train(train_loader, model, criterion, optimizer, epoch, level):
         optimizer.step()
 
         if (epoch%100>90) or (epoch%100<10):
-            output2 = criterion(output)
+            output2 = criterion2(output)
             prec1, prec5 = accuracy(output2.data, target, topk=(1, 5))
             top1.update(prec1[0])
             top5.update(prec5[0])
