@@ -158,7 +158,9 @@ class myResNetDeeper(nn.Module):
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AvgPool2d(7, stride=1)
         self.fc = nn.Linear(512 * block.expansion, 800)
-        self.fc2 = nn.Linear(800, num_dims)
+        self.fc2 = nn.Linear(800, 400)
+        self.fc3 = nn.Linear(400, 100)
+        self.fc4 = nn.Linear(100, num_dims)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -201,6 +203,10 @@ class myResNetDeeper(nn.Module):
         x = self.fc(x)
         x = self.relu(x)
         x = self.fc2(x)
+        x = self.relu(x)
+        x = self.fc3(x)
+        x = self.relu(x)
+        x = self.fc4(x)
 
         return x
 
@@ -211,6 +217,14 @@ def myResnet18(pretrained=False, **kwargs):
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
     model = myResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
+    return model
+
+def myResnet18deep(pretrained=False, **kwargs):
+    """Constructs a ResNet-18 model.
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet
+    """
+    model = myResNetDeeper(BasicBlock, [2, 2, 2, 2], **kwargs)
     return model
 
 def myResnet34(pretrained=False, **kwargs):

@@ -118,7 +118,7 @@ def main():
         model = torch.nn.parallel.DistributedDataParallel(model)
 
     # define loss function (criterion) and optimizer
-    criterion_ = my_modell.myLossSoft().cuda()
+    criterion_ = my_modell.myLoss().cuda()
     criterion2_ = my_modell.myLossA().cuda()
 
     if args.pretrained:
