@@ -193,7 +193,7 @@ def main():
         return
 
     for epoch in range(args.start_epoch, args.epochs):
-        train(train_loader, model, criterion_, criterion2_, optimizer, epoch)
+        train(train_loader, model, criterion_, criterion2_, criterionC_, optimizer, epoch)
     torch.save(model.module.state_dict(),'0922mytraining.pt')
 
 def train(train_loader, model, criterion, criterion2, criterionC, optimizer, epoch):
