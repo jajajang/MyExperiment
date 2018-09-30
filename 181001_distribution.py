@@ -185,7 +185,7 @@ def finalcheck(train_loader, model):
         # compute output
         output = model(input_var)
         forprint=torch.norm(output,2,1)
-        np.savetxt(f,forprint.data.numpy(), fmt='%.4f')
+        np.savetxt(f,forprint.data.cpu().numpy(), fmt='%.4f')
 
 
 
