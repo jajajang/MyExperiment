@@ -194,7 +194,7 @@ def finalcheck(train_loader, model):
         output = model(input_var)
         forprint=torch.norm(output,2,1)
         
-        for s in range len(forprint):
+        for s in range(len(forprint)):
             listoflist[target[s]].append(forprint[s])
 
         # measure accuracy and record loss
