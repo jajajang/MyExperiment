@@ -154,7 +154,6 @@ def main():
         if args.distributed:
             train_sampler.set_epoch(epoch)
         adjust_learning_rate(optimizer, epoch)
-        finalcheck(train_loader,model)
         # train for one epoch
         train(train_loader, model, criterion, optimizer, epoch)
 
@@ -171,6 +170,7 @@ def main():
             'best_prec1': best_prec1,
             'optimizer' : optimizer.state_dict(),
         }, is_best)
+    finalcheck(train_loader,model)
     
 
 f=open('181001_mean.txt','w')
