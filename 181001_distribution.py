@@ -203,7 +203,7 @@ def finalcheck(train_loader, model):
         batch_time.update(time.time() - end)
         end = time.time()
     
-    finally=np.matrix(listoflist)
+    mat=np.matrix(listoflist)
     with open('181001_mean.txt','w') as f:
         for line in mat:
             np.savetxt(f,line, fmt='%.4f')
