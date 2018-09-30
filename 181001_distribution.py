@@ -173,13 +173,9 @@ def main():
         }, is_best)
     
 
-
+f=open('181001_mean.txt','w')
 
 def finalcheck(train_loader, model):
-    listoflist=[]
-    while len(listoflist)<200:
-        listoflist.append([])
-    # switch to train mode
     model.train()
 
     for i, (input, target) in enumerate(train_loader):
@@ -189,18 +185,7 @@ def finalcheck(train_loader, model):
         # compute output
         output = model(input_var)
         forprint=torch.norm(output,2,1)
-        
-        for s in range(len(forprint)):
-            listoflist[target[s]].append(forprint[s])
-
-        # measure accuracy and record loss
-
-        # measure elapsed time
-    
-    mat=np.matrix(listoflist)
-    with open('181001_mean.txt','w') as f:
-        for line in mat:
-            np.savetxt(f,line, fmt='%.4f')
+        np.savetxt(f,forprint.data.numpy(), fmt='%.4f')
 
 
 
