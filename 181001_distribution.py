@@ -194,7 +194,9 @@ def train(train_loader, model, criterion, optimizer, epoch):
 
         # compute output
         output = model(input_var)
+        print output
         print torch.norm(output)
+        print torch.norm(output,2,1)
         print 'Hello \n'
         loss = criterion(output, target_var)
 
