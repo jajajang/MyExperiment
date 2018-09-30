@@ -2,7 +2,7 @@ import argparse
 import os
 import shutil
 import time
-
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.parallel
@@ -154,7 +154,7 @@ def main():
         if args.distributed:
             train_sampler.set_epoch(epoch)
         adjust_learning_rate(optimizer, epoch)
-
+        finalcheck(train_loader,model)
         # train for one epoch
         train(train_loader, model, criterion, optimizer, epoch)
 
@@ -171,6 +171,43 @@ def main():
             'best_prec1': best_prec1,
             'optimizer' : optimizer.state_dict(),
         }, is_best)
+    
+
+
+
+def finalcheck(train_loader, model):
+    batch_time = AverageMeter()
+    data_time = AverageMeter()
+    listoflist=[]
+    while len(listoflist)<200:
+        listoflist.append([])
+    # switch to train mode
+    model.train()
+
+    for i, (input, target) in enumerate(train_loader):
+        # measure data loading time
+        data_time.update(time.time() - end)
+
+        input_var = torch.autograd.Variable(input)
+        
+        # compute output
+        output = model(input_var)
+        forprint=torch.norm(output,2,1)
+        
+        for s in range len(forprint):
+            listoflist[target[s]].append(forprint[s])
+
+        # measure accuracy and record loss
+
+        # measure elapsed time
+        batch_time.update(time.time() - end)
+        end = time.time()
+    
+    finally=np.matrix(listoflist)
+    with open('181001_mean.txt','w') as f:
+        for line in mat:
+            np.savetxt(f,line, fmt='%.4f')
+
 
 
 def train(train_loader, model, criterion, optimizer, epoch):
