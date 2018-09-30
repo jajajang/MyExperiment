@@ -176,8 +176,6 @@ def main():
 
 
 def finalcheck(train_loader, model):
-    batch_time = AverageMeter()
-    data_time = AverageMeter()
     listoflist=[]
     while len(listoflist)<200:
         listoflist.append([])
@@ -186,8 +184,6 @@ def finalcheck(train_loader, model):
 
     for i, (input, target) in enumerate(train_loader):
         # measure data loading time
-        data_time.update(time.time() - end)
-
         input_var = torch.autograd.Variable(input)
         
         # compute output
@@ -200,8 +196,6 @@ def finalcheck(train_loader, model):
         # measure accuracy and record loss
 
         # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
     
     mat=np.matrix(listoflist)
     with open('181001_mean.txt','w') as f:
