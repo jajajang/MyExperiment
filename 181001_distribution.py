@@ -150,6 +150,7 @@ def main():
         validate(val_loader, model, criterion)
         return
 
+    finalcheck(train_loader,model)
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
@@ -173,7 +174,7 @@ def main():
     finalcheck(train_loader,model)
     
 
-f=open('181001_mean.txt','w')
+f=open('181002_experi.txt','w')
 
 def finalcheck(train_loader, model):
     model.train()
@@ -183,9 +184,10 @@ def finalcheck(train_loader, model):
         input_var = torch.autograd.Variable(input)
         
         # compute output
-        output = model(input_var)
+        output = model(input_var).detach()
         forprint=torch.norm(output,2,1)
         np.savetxt(f,forprint.data.cpu().numpy(), fmt='%.4f')
+        del output
 
 
 
