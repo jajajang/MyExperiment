@@ -194,7 +194,8 @@ def main():
 
     for epoch in range(args.start_epoch, args.epochs):
         train(train_loader, model, criterion_, criterion2_, criterionC_, optimizer, epoch)
-    torch.save(model.module.state_dict(),'0922mytraining.pt')
+        adjust_learning_rate(optimizer, epoch)
+    torch.save(model.module.state_dict(),'1009mytraining_regular.pt')
 
 def train(train_loader, model, criterion, criterion2, criterionC, optimizer, epoch):
     batch_time = AverageMeter()
@@ -280,7 +281,7 @@ class AverageMeter(object):
 
 def adjust_learning_rate(optimizer, epoch):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    lr = args.lr * (0.5 ** (epoch // 30))
+    lr = args.lr * (0.3 ** (epoch // 30))
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
