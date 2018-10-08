@@ -83,7 +83,7 @@ parser.add_argument('--dist-backend', default='gloo', type=str,
 
 best_prec1 = 0
 outf_mean=open('mean_error.txt','w')
-outf_center=open('180922centy.txt','w')
+outf_center=open('181009_regular_centy.txt','w')
 
 
 def main():
