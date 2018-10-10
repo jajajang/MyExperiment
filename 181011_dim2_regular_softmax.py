@@ -120,6 +120,7 @@ def main():
 
     # define loss function (criterion) and optimizer
     crit = nn.NLLLoss().cuda()
+    crit2 = my_modell.myLoss().cuda()
     criterion_ = my_modell.myLossA().cuda()
     criterion2_ = my_modell.myLossA().cuda()
     criterionC_ = my_modell.myLossC().cuda()
@@ -195,11 +196,11 @@ def main():
         return
 
     for epoch in range(args.start_epoch, args.epochs):
-        train(train_loader, model, crit, criterion_, criterion2_, criterionC_, optimizer, epoch)
+        train(train_loader, model, crit, crit2, criterion_, criterion2_, criterionC_, optimizer, epoch)
         adjust_learning_rate(optimizer, epoch)
     torch.save(model.module.state_dict(),'1009mytraining_regular.pt')
 
-def train(train_loader, model, crit, criterion, criterion2, criterionC, optimizer, epoch):
+def train(train_loader, model, crit, crit2, criterion, criterion2, criterionC, optimizer, epoch):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -225,14 +226,13 @@ def train(train_loader, model, crit, criterion, criterion2, criterionC, optimize
         forprint = criterionC(output)
 
 
-        loss = crit(F.log_softmax(criterion(output)), target_var)
+        loss = crit(F.log_softmax(criterion(output)), target_var)+1/1000*crit2(output,target_var)
         # measure accuracy and record loss
         losses.update(loss.item(), input.size(0))
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
         loss.backward()
-        clip_grad_norm(model.parameters(),0.5)
         optimizer.step()
 
         if (epoch%100>90) or (epoch%100<10):
