@@ -22,7 +22,7 @@ import argparse
 import os
 import shutil
 import time
-
+import torch.nn.functional as F
 import torch
 import torch.nn as nn
 import torch.nn.parallel
@@ -118,7 +118,7 @@ def main():
         model = torch.nn.parallel.DistributedDataParallel(model)
 
     # define loss function (criterion) and optimizer
-    crit = nn.CrossEntropyLoss().cuda()
+    crit = nn.NLLLoss().cuda()
     criterion_ = my_modell.myLossA().cuda()
     criterion2_ = my_modell.myLossA().cuda()
     criterionC_ = my_modell.myLossC().cuda()
@@ -223,7 +223,8 @@ def train(train_loader, model, crit, criterion, criterion2, criterionC, optimize
 
         forprint = criterionC(output)
 
-        loss = crit(criterion(output), target_var)-forprint
+
+        loss = crit(F.log_softmax(criterion((output)), target_var)-forprint
         # measure accuracy and record loss
         losses.update(loss.item(), input.size(0))
 
