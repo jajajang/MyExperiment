@@ -224,7 +224,7 @@ def train(train_loader, model, crit, criterion, criterion2, criterionC, optimize
         forprint = criterionC(output)
 
 
-        loss = crit(F.log_softmax(criterion(output)), target_var)-forprint
+        loss = crit(F.softmax(criterion(output)), target_var, log_input=False)-forprint
         # measure accuracy and record loss
         losses.update(loss.item(), input.size(0))
 
