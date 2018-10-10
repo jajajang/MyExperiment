@@ -232,7 +232,7 @@ def train(train_loader, model, crit, criterion, criterion2, criterionC, optimize
         # compute gradient and do SGD step
         optimizer.zero_grad()
         loss.backward()
-        clip_grad_norm(model.parameters(),1)
+        clip_grad_norm(model.parameters(),0.5)
         optimizer.step()
 
         if (epoch%100>90) or (epoch%100<10):
