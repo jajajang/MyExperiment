@@ -18,6 +18,7 @@ from torch.autograd import Variable
 
 import my_model_2dim as my_modell
 
+from torch.nn.utils import clip_grad_norm
 import argparse
 import os
 import shutil
@@ -224,13 +225,14 @@ def train(train_loader, model, crit, criterion, criterion2, criterionC, optimize
         forprint = criterionC(output)
 
 
-        loss = crit(F.softmax(criterion(output)), target_var, log_input=False)-forprint
+        loss = crit(F.log_softmax(criterion(output)), target_var)-forprint
         # measure accuracy and record loss
         losses.update(loss.item(), input.size(0))
 
         # compute gradient and do SGD step
         optimizer.zero_grad()
         loss.backward()
+        clip_grad_norm(model.parameters(),1)
         optimizer.step()
 
         if (epoch%100>90) or (epoch%100<10):
