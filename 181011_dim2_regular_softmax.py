@@ -83,7 +83,7 @@ parser.add_argument('--dist-backend', default='gloo', type=str,
 
 best_prec1 = 0
 outf_mean=open('mean_error.txt','w')
-outf_center=open('181009_regular_centy.txt','w')
+outf_center=open('181011_softmax_centy.txt','w')
 
 
 def main():
@@ -254,7 +254,7 @@ def train(train_loader, model, crit, criterion, criterion2, criterionC, optimize
                   'forprint {forprint:.3f}\t'.format(
                    epoch, i, len(train_loader), batch_time=batch_time,
                    data_time=data_time, loss=losses, forprint = forprint))
-            outf_center.write(str(forprint.cpu().data)+'\n')       
+            outf_center.write(str(forprint.data[0]+'\n')       
 
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
