@@ -84,7 +84,7 @@ parser.add_argument('--dist-backend', default='gloo', type=str,
 
 best_prec1 = 0
 outf_center=open('181016_todevice.txt','w')
-device=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
     global args, best_prec1
